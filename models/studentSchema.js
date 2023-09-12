@@ -50,12 +50,12 @@ const StudentSchema = new mongoose.Schema({
   },
 });
 
-studentSchema.pre("save", async function () {
+StudentSchema.pre("save", async function () {
   this.password = `${this.birthMonth}-${this.birthDay}`;
   next();
 });
 
-studentSchema.pre("save", async function () {
+StudentSchema.pre("save", async function () {
   this.username = `${this.lastName}-${this.firstName}`;
   next();
 });
