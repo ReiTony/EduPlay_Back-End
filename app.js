@@ -12,7 +12,7 @@ const cors = require('cors');
 const connectDB = require("./db/connect");
 
 //routers
-const loginRouter = require('./routes/loginRoutes');
+const userRouter = require('./routes/userRoutes');
 
 //middleware
 const notFoundMiddleware = require("./middleware/not_found");
@@ -26,7 +26,7 @@ app.use(express.static('./public'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
-app.use('/api/v1/auth', loginRouter);
+app.use('/api/v1/Users', userRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
