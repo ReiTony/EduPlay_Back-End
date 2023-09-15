@@ -22,9 +22,6 @@ const getSingleTeacher = async (req, res) => {
   res.status(StatusCodes.OK).json({ teacher });
 };
 
-const showCurrentTeacher = async (req, res) => {
-  res.status(StatusCodes.OK).json({ teacher: req.teacher });
-};
 
 const updateTeacher = async (req, res) => {
   const { email, username, name} = req.body;
@@ -80,7 +77,6 @@ const deleteTeacher = async (req, res) => {
 module.exports = {
   getAllTeachers,
   getSingleTeacher,
-  showCurrentTeacher,
   updateTeacher,
   updateTeacherPassword,
   deleteTeacher,

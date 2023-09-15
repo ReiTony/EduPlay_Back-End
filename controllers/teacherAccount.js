@@ -11,6 +11,10 @@ const {
 } = require("../utils");
 const crypto = require("crypto");
 
+const currentTeacher = async (req, res) => {
+  res.status(StatusCodes.OK).json({ teacher: req.teacher });
+};
+
 const teacherRegister = async (req, res) => {
     const { email, name, password } = req.body;
   
@@ -184,5 +188,6 @@ const teacherRegister = async (req, res) => {
     teacherVerifyEmail,
     teacherForgotPassword,
     teacherResetPassword,
+    currentTeacher,
   };
   

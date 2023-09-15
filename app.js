@@ -12,7 +12,9 @@ const cors = require('cors');
 const connectDB = require("./db/connect");
 
 //routers
-const userRouter = require('./routes/userRoutes');
+const adminRouter = require('./routes/adminRoutes');
+const teacherRouter = require('./routes/teacherRoutes');
+const studentRouter = require('./routes/studentRoutes');
 
 //middleware
 const notFoundMiddleware = require("./middleware/not_found");
@@ -26,7 +28,9 @@ app.use(express.static('./public'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
-app.use('/api/v1/Users', userRouter);
+app.use('/api/v1/Admin', adminRouter);
+app.use('/api/v1/Teacher', teacherRouter);
+app.use('/api/v1/Student', studentRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

@@ -36,6 +36,13 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     default: "Student",
   },
+  image: {
+    type: String,
+    default: "https://res.cloudinary.com/diverse/image/upload/v1674562453/diverse/oipm1ecb1yudf9eln7az.jpg",
+  },
+  section: {
+    type: String,
+  },
   verificationToken: String,
   isVerified: {
     type: Boolean,

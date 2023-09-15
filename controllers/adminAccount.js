@@ -12,7 +12,7 @@ const {
 const crypto = require("crypto");
 
 const adminRegister = async (req, res) => {
-    const { email, name, password } = req.body;
+    const { email, name, password, username, role, } = req.body;
   
     const emailAlreadyExists = await Admin.findOne({ email });
     if (emailAlreadyExists) {
@@ -23,6 +23,7 @@ const adminRegister = async (req, res) => {
   
     const admin = await Admin.create({
       name,
+      username,
       email,
       password,
       role,
@@ -63,12 +64,12 @@ const adminRegister = async (req, res) => {
   };
   
   const adminLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
   
-    if (!email || !password) {
-      throw new CustomError.BadRequestError('Please provide email and password');
+    if (!username || !password) {
+      throw new CustomError.BadRequestError('Please provide username and password');
     }
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ username });
   
     if (!admin) {
       throw new CustomError.UnauthenticatedError('Invalid Credentials');
@@ -177,6 +178,10 @@ const adminRegister = async (req, res) => {
   
     res.send('reset password');
   };
+
+  const showCurrentAdmin = async (req, res) => {
+    res.status(StatusCodes.OK).json({ admin: req.admin });
+  };
   
   module.exports = {
     adminRegister,
@@ -185,5 +190,6 @@ const adminRegister = async (req, res) => {
     adminVerifyEmail,
     adminForgotPassword,
     adminResetPassword,
+    showCurrentAdmin,
   };
   
