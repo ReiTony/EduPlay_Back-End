@@ -13,7 +13,7 @@ const connectDB = require("./db/connect");
 
 //routers
 const adminRouter = require('./routes/adminRoutes');
-const teacherRouter = require('./routes/teacherRoutes');
+const teacherRouter = require('./routes/TeacherRoutes');
 const studentRouter = require('./routes/studentRoutes');
 
 //middleware
@@ -27,6 +27,7 @@ app.use(express.static('./public'));
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+
 
 app.use('/api/v1/Admin', adminRouter);
 app.use('/api/v1/Teacher', teacherRouter);

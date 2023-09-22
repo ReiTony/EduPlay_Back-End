@@ -1,16 +1,17 @@
 const express = require("express");
-const teacherRouter = express.Router();
+const router = express.Router();
 
 const {
   authenticateUser,
   authorizePermissions,
 } = require("../middleware/authentication");
 const {
+  studentRegister,
   getAllStudents,
   getSingleStudent,
   updateStudent,
   deleteStudent,
-} = require("../controllers/studentAccount");
+} = require("../controllers/studentController");
 const {
   currentTeacher,
   teacherRegister,
@@ -19,7 +20,7 @@ const {
   teacherVerifyEmail,
   teacherForgotPassword,
   teacherResetPassword,
-} = require("../controllers/teacherAccount");
+} = require("../controllers/teacherController");
 
 //Teacher
 router.get("/", authenticateUser, currentTeacher);
@@ -36,9 +37,9 @@ router.get(
   authorizePermissions("teacher"),
   getAllStudents
 );
-
+router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", authenticateUser, getSingleStudent);
 router.patch("/updateStudent/:id", authenticateUser, updateStudent);
 router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
 
-module.exports = teacherRouter;
+module.exports = router;

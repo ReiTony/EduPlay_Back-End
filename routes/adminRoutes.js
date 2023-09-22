@@ -1,5 +1,5 @@
 const express = require("express");
-const adminRouter = express.Router();
+const router = express.Router();
 
 const {
   authenticateUser,
@@ -14,7 +14,7 @@ const {
   adminForgotPassword,
   adminResetPassword,
   showCurrentAdmin,
-} = require("../controllers/adminAccount");
+} = require("../controllers/adminController");
 const {
   getAllTeachers,
   getSingleTeacher,
@@ -23,6 +23,13 @@ const {
   deleteTeacher,
 } = require("../controllers/manageTeach");
 
+const {
+  studentRegister,
+  getAllStudents,
+  getSingleStudent,
+  updateStudent,
+  deleteStudent,
+} = require("../controllers/studentController");
 //Admin
 router.get("/", authenticateUser, showCurrentAdmin);
 router.post("/register", adminRegister);
@@ -46,5 +53,16 @@ router.patch(
   updateTeacherPassword
 );
 router.delete("/deleteTeacher/:id", authenticateUser, deleteTeacher);
+//Admin Manages Student Account
+router.get(
+  "/Manage-Students",
+  authenticateUser,
+  authorizePermissions("admin"),
+  getAllStudents
+);
+router.post("/addStudent", studentRegister);
+router.get("/showStudent/:id", authenticateUser, getSingleStudent);
+router.patch("/updateStudent/:id", authenticateUser, updateStudent);
+router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
 
-module.exports = adminRouter;
+module.exports = router;

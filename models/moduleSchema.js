@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 const ModuleSchema = new mongoose.Schema({
-    gradeLevel: {
-        type: String
+    moduleGradeLevel: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Class',
     },
     file_id: {
         type: String
@@ -13,5 +15,6 @@ const ModuleSchema = new mongoose.Schema({
     date: {
         type: Date
     }
-});
+},{ timestamps: true });
+
 module.exports = mongoose.model("Module", ModuleSchema);
