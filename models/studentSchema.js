@@ -42,16 +42,12 @@ const StudentSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/diverse/image/upload/v1674562453/diverse/oipm1ecb1yudf9eln7az.jpg",
     },
-    studentGradeLevel: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
+    gradeLevel: {
+      type: String,
+      enum: ['1','2','3'],
       required: true,
     },
     verificationToken: String,
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
     verified: Date,
     passwordToken: {
       type: String,
@@ -63,14 +59,5 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-StudentSchema.pre("save", async function () {
-  this.password = `${this.birthMonth}-${this.birthDay}`;
-  next();
-});
-
-StudentSchema.pre("save", async function () {
-  this.username = `${this.lastName}-${this.firstName}`;
-  next();
-});
 
 module.exports = mongoose.model("Student", StudentSchema);

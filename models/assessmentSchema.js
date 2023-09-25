@@ -10,10 +10,10 @@ const AssessmentSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    assessmentGradeLevel: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Class',
+    gradeLevel: {
+      type: String,
+      enum: ["1", "2", "3"],
+      required: true,
     },
   },
   { timestamps: true }

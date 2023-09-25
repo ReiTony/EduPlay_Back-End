@@ -14,9 +14,9 @@ const TeacherSchema = new mongoose.Schema(
       type: String,
       default: "Teacher",
     },
-    teacherClass: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
+    gradeLevel: {
+      type: String,
+      enum: ['1','2','3'],
       required: true,
     },
     name: {
@@ -29,7 +29,6 @@ const TeacherSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide username"],
       minlength: 3,
-      maxlength: 10,
     },
     email: {
       type: String,

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const TokenSchema = new mongoose.Schema(
   {
@@ -8,8 +8,13 @@ const TokenSchema = new mongoose.Schema(
     isValid: { type: Boolean, default: true },
     user: {
       type: mongoose.Types.ObjectId,
-      ref: "User",
+      refPath: "userModel",
       required: true,
+    },
+    userModel: {
+      type: String, 
+      required: true,
+      enum: ["Student", "Teacher", "Admin"], 
     },
   },
   { timestamps: true }

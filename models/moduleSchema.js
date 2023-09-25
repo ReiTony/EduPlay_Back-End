@@ -1,20 +1,23 @@
 const mongoose = require("mongoose");
 
-const ModuleSchema = new mongoose.Schema({
-    moduleGradeLevel: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Class',
+const ModuleSchema = new mongoose.Schema(
+  {
+    gradeLevel: {
+      type: String,
+      enum: ["1", "2", "3"],
+      required: true,
     },
     file_id: {
-        type: String
+      type: String,
     },
     file_extension: {
-        type: String
+      type: String,
     },
     date: {
-        type: Date
-    }
-},{ timestamps: true });
+      type: Date,
+    },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Module", ModuleSchema);

@@ -9,7 +9,7 @@ const {
 
 const getAllTeachers = async (req, res) => {
   console.log(req.teacher);
-  const teacher = await Teacher.find({ role: 'teacher' });
+  const teacher = await Teacher.find({ role: 'Teacher' });
   res.status(StatusCodes.OK).json({ teachers });
 };
 

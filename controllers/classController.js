@@ -1,18 +1,31 @@
-const Token = require('../models/tokenSchema')
-const Student = require('../models/studentSchema')
-const Teacher = require('../models/teacherSchema')
-const Class = require('../models/classSchema')
+const Student = require("../models/studentSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
-const getAllClass = async (req, res) => {
-        let students = await Student.find({ studentGradeLevel: req.params.id })
-        if (students.length > 0) {
-            let modifiedStudents = students.map((student) => {
-                return { ...student._doc, password: undefined };
-            });
-            res.send(modifiedStudents);
-        } else {
-            res.send({ message: "No students found" });
-        }
-}
+const getClass = async (req, res) => {
+  try {
+    const teacherGradeLevel = req.teacher.gradeLevel;
+
+    const students = await Student.find({
+      studentGradeLevel: teacherGradeLevel,
+    }).select("-password");
+
+    if (students.length > 0) {
+      res.send(students);
+    } else {
+      res.send({
+        message: "No students found in the same grade level as the teacher",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
+  }
+};
+
+
+module.exports = {
+  getClass,
+};

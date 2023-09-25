@@ -41,28 +41,30 @@ router.post("/forgot-password", adminForgotPassword);
 //Admin Manages Teacher Account
 router.get(
   "/Manage-Teachers",
-  authenticateUser,
-  authorizePermissions("admin"),
+  //authenticateUser,
+  //authorizePermissions("admin"),
   getAllTeachers
 );
-router.get("/showTeacher/:id", authenticateUser, getSingleTeacher);
-router.patch("/updateTeacher/:id", authenticateUser, updateTeacher);
+router.get("/showTeacher/:id", //authenticateUser, 
+getSingleTeacher);
+router.patch("/updateTeacher/:id", //authenticateUser, 
+updateTeacher);
 router.patch(
   "/updateTeacherPassword/:id",
-  authenticateUser,
+  //authenticateUser,
   updateTeacherPassword
 );
 router.delete("/deleteTeacher/:id", authenticateUser, deleteTeacher);
 //Admin Manages Student Account
 router.get(
   "/Manage-Students",
-  authenticateUser,
-  authorizePermissions("admin"),
+  //authenticateUser,
+  //authorizePermissions("admin"),
   getAllStudents
 );
 router.post("/addStudent", studentRegister);
-router.get("/showStudent/:id", authenticateUser, getSingleStudent);
-router.patch("/updateStudent/:id", authenticateUser, updateStudent);
-router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
+router.get("/showStudent/:id", getSingleStudent);
+router.patch("/updateStudent/:id", updateStudent);
+router.delete("/deleteStudent/:id", deleteStudent);
 
 module.exports = router;

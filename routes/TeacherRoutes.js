@@ -7,7 +7,6 @@ const {
 } = require("../middleware/authentication");
 const {
   studentRegister,
-  getAllStudents,
   getSingleStudent,
   updateStudent,
   deleteStudent,
@@ -21,25 +20,27 @@ const {
   teacherForgotPassword,
   teacherResetPassword,
 } = require("../controllers/teacherController");
-
+const {
+  getClass
+} = require("../controllers/classController")
 //Teacher
 router.get("/", authenticateUser, currentTeacher);
 router.post("/register", teacherRegister);
 router.post("/login", teacherLogin);
-router.delete("/logout", authenticateUser, teacherLogout);
+router.delete("/logout", teacherLogout);
 router.post("/verify-email", teacherVerifyEmail);
 router.post("/reset-password", teacherResetPassword);
 router.post("/forgot-password", teacherForgotPassword);
-//Teacher Manages Student Account
+//Teacher Manages Student Account with same GradeLevel
 router.get(
-  "/Manage-Students",
-  authenticateUser,
-  authorizePermissions("teacher"),
-  getAllStudents
+  "/Class",
+  //authenticateUser,
+  //authorizePermissions("teacher"),
+  getClass
 );
 router.post("/addStudent", studentRegister);
-router.get("/showStudent/:id", authenticateUser, getSingleStudent);
-router.patch("/updateStudent/:id", authenticateUser, updateStudent);
+router.get("/showStudent/:id",  getSingleStudent);
+router.patch("/updateStudent/:id",  updateStudent);
 router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
 
 module.exports = router;
