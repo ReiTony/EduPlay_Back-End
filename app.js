@@ -7,6 +7,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
+const multer = require('multer');
 
 //database
 const connectDB = require("./db/connect");
