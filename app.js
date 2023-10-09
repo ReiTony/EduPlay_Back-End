@@ -29,7 +29,7 @@ app.use(express.static('./public'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
-
+//URL-ROUTES
 app.use('/api/v1/Admin', adminRouter);
 app.use('/api/v1/Teacher', teacherRouter);
 app.use('/api/v1/Student', studentRouter);
