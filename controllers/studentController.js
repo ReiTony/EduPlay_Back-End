@@ -12,8 +12,8 @@ const crypto = require("crypto");
 
 const studentRegister = async (req, res) => {
   const { lastName, firstName, birthMonth, birthDay, gradeLevel } = req.body;
-  const username = `${lastName}-${firstName}`;
-  const password = `${birthMonth}-${birthDay}`;
+  const username = `${lastName}${firstName}`;
+  const password = `${birthMonth}${birthDay}`;
   const verificationToken = crypto.randomBytes(40).toString("hex");
 
   const counter = await Counter.findOneAndUpdate(
