@@ -1,4 +1,5 @@
 const Student = require("../models/studentSchema");
+const Counter = require("../models/counterSchema");
 const Token = require("../models/tokenSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
@@ -15,7 +16,14 @@ const studentRegister = async (req, res) => {
   const password = `${birthMonth}-${birthDay}`;
   const verificationToken = crypto.randomBytes(40).toString("hex");
 
+  const counter = await Counter.findOneAndUpdate(
+    { name: "studentId" },
+    { $inc: { value: 1 } },
+    { new: true }
+  );
+
   const newStudent = new Student({
+    studentId: counter.value,
     firstName,
     lastName,
     birthDay,

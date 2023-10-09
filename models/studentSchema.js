@@ -3,6 +3,10 @@ const validator = require("validator");
 
 const StudentSchema = new mongoose.Schema(
   {
+    studentId: {
+      type: Number,
+      unique: true,
+    },
     firstName: {
       type: String,
       required: [true, "Please provide first name"],
@@ -44,7 +48,7 @@ const StudentSchema = new mongoose.Schema(
     },
     gradeLevel: {
       type: String,
-      enum: ['1','2','3'],
+      enum: ["1", "2", "3"],
       required: true,
     },
     verificationToken: String,
@@ -59,5 +63,19 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+//  Assign studentId before saving
+StudentSchema.pre("save", async function (next) {
+  if (!this.studentId) {
+    // Find and update the counter
+    const counter = await Counter.findOneAndUpdate(
+      { name: "studentId" },
+      { $inc: { value: 1 } }, // Increment the counter
+      { new: true } // Return the updated counter document
+    );
+
+    this.studentId = counter.value;
+  }
+  next();
+});
 
 module.exports = mongoose.model("Student", StudentSchema);
