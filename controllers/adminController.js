@@ -29,7 +29,7 @@ const adminRegister = async (req, res) => {
     username,
     verificationToken,
   });
-  const origin = "http://localhost:3000";
+  const origin = "http://localhost:5173";
 
   await sendVerification({
     name: admin.name,

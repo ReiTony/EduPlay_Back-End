@@ -35,7 +35,7 @@ const teacherRegister = async (req, res) => {
       lrn,
       verificationToken,
     });
-    const origin = "http://localhost:3000";
+    const origin = "http://localhost:5173";
 
     await sendVerification({
       name: teacher.name,
@@ -171,7 +171,7 @@ const teacherForgotPassword = async (req, res) => {
 
   if (teacher) {
     const passwordToken = crypto.randomBytes(70).toString("hex");
-    const origin = "http://localhost:3000";
+    const origin = "http://localhost:5173";
     await sendResetPassword({
       name: teacher.name,
       email: teacher.email,
