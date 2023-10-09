@@ -10,6 +10,7 @@ const {
   getSingleStudent,
   updateStudent,
   deleteStudent,
+  getAllStudents
 } = require("../controllers/studentController");
 const {
   currentTeacher,
@@ -36,7 +37,7 @@ router.get(
   "/Class",
   //authenticateUser,
   //authorizePermissions("teacher"),
-  getClass
+  getAllStudents
 );
 router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id",  getSingleStudent);
