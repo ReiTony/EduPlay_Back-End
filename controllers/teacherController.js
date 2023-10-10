@@ -17,7 +17,7 @@ const currentTeacher = async (req, res) => {
 
 const teacherRegister = async (req, res) => {
   try {
-    const { email, name, password, username, gradeLevel, lrn } = req.body;
+    const { email, name, password, gradeLevel, lrn } = req.body;
 
     const emailAlreadyExists = await Teacher.findOne({ email });
     if (emailAlreadyExists) {
@@ -30,7 +30,6 @@ const teacherRegister = async (req, res) => {
       name,
       email,
       password,
-      username,
       gradeLevel,
       lrn,
       verificationToken,
@@ -112,7 +111,7 @@ const teacherLogin = async (req, res) => {
 
     let refreshToken = "";
 
-    const existingToken = await Token.findOne({ teacher: teacher._id });
+    const existingToken = await Token.findOne({ user: teacher._id });
 
     if (existingToken) {
       const { isValid } = existingToken;
@@ -120,8 +119,8 @@ const teacherLogin = async (req, res) => {
         throw new CustomError.UnauthenticatedError("Invalid Credentials");
       }
       refreshToken = existingToken.refreshToken;
-      attachCookiesToResponse({ res, teacher: tokenTeacher, refreshToken });
-      res.status(StatusCodes.OK).json({ teacher: tokenTeacher });
+      attachCookiesToResponse({ res, user: tokenTeacher, refreshToken });
+      res.status(StatusCodes.OK).json({ user: tokenTeacher });
       return;
     }
 
@@ -131,14 +130,15 @@ const teacherLogin = async (req, res) => {
       refreshToken,
       ip,
       userAgent,
+      gradeLevel: teacher.gradeLevel,
       user: teacher._id,
       userModel: "Teacher"
     };
 
     await Token.create(teacherToken);
-    attachCookiesToResponse({ res, teacher: tokenTeacher, refreshToken });
+    attachCookiesToResponse({ res, user: tokenTeacher, refreshToken });
 
-    res.status(StatusCodes.OK).json({ teacher: tokenTeacher });
+    res.status(StatusCodes.OK).json({ user: tokenTeacher });
   } catch (error) {
     console.error(error);
     res

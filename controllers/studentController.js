@@ -1,5 +1,4 @@
 const Student = require("../models/studentSchema");
-const Counter = require("../models/counterSchema");
 const Token = require("../models/tokenSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
@@ -11,85 +10,107 @@ const {
 const crypto = require("crypto");
 
 const studentRegister = async (req, res) => {
-  const { lastName, firstName, birthMonth, birthDay, gradeLevel } = req.body;
-  const username = `${lastName}${firstName}`;
-  const password = `${birthMonth}${birthDay}`;
-  const verificationToken = crypto.randomBytes(40).toString("hex");
+  try {
+    const { lastName, firstName, birthMonth, birthDay, gradeLevel } = req.body;
+    const username = `${lastName}${firstName}`;
+    const password = `${birthMonth}${birthDay}`;
+    const verificationToken = crypto.randomBytes(40).toString("hex");
 
-  const counter = await Counter.findOneAndUpdate(
-    { name: "studentId" },
-    { $inc: { value: 1 } },
-    { new: true }
-  );
+    // Calculate studentId based on the current number of registered students
+    const studentCount = await Student.countDocuments({});
+    const studentId = studentCount + 1;
 
-  const newStudent = new Student({
-    studentId: counter.value,
-    firstName,
-    lastName,
-    birthDay,
-    birthMonth,
-    gradeLevel,
-    username,
-    password,
-    verificationToken,
-  });
+    const newStudent = new Student({
+      studentId,
+      firstName,
+      lastName,
+      birthDay,
+      birthMonth,
+      gradeLevel,
+      username,
+      password,
+      verificationToken,
+    });
 
-  await newStudent.save();
+    await newStudent.save();
 
-  res.status(StatusCodes.CREATED).json({
-    msg: "Success! Student Created",
-  });
+    res.status(StatusCodes.CREATED).json({
+      msg: "Success! Student Created",
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: "An error occurred while processing your request.",
+    });
+  }
 };
 
 const studentLogin = async (req, res) => {
-  const { username, password } = req.body;
-  const userAgent = req.headers["student-agent"];
-  if (!username || !password) {
-    throw new CustomError.BadRequestError("Please provide email and password");
-  }
-  const student = await Student.findOne({ username });
+  try {
+    const { username, password } = req.body;
+    const userAgent = req.headers["student-agent"];
 
-  if (!student) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
-  }
-  const isPasswordCorrect = await student.comparePassword(password);
+    if (!username || !password) {
+      throw new CustomError.BadRequestError(
+        "Please provide email and password"
+      );
+    }
 
-  if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
-  }
-  const tokenStudent = createTokenUser(student, userAgent);
+    const student = await Student.findOne({ username });
 
-  let refreshToken = "";
-
-  const existingToken = await Token.findOne({ user: student._id });
-
-  if (existingToken) {
-    const { isValid } = existingToken;
-    if (!isValid) {
+    if (!student) {
       throw new CustomError.UnauthenticatedError("Invalid Credentials");
     }
-    refreshToken = existingToken.refreshToken;
+
+    const isPasswordCorrect = await student.comparePassword(password);
+
+    if (!isPasswordCorrect) {
+      throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    }
+
+    const tokenStudent = createTokenUser(student, userAgent);
+
+    let refreshToken = "";
+
+    const existingToken = await Token.findOne({ user: student._id });
+
+    if (existingToken) {
+      const { isValid } = existingToken;
+      if (!isValid) {
+        throw new CustomError.UnauthenticatedError("Invalid Credentials");
+      }
+      refreshToken = existingToken.refreshToken;
+      attachCookiesToResponse({ res, user: tokenStudent, refreshToken });
+      res.status(StatusCodes.OK).json({ user: tokenStudent });
+      return;
+    }
+
+    refreshToken = crypto.randomBytes(40).toString("hex");
+    const ip = req.ip;
+    const studentToken = {
+      refreshToken,
+      ip,
+      userAgent,
+      user: student._id,
+      userModel: "Student",
+    };
+
+    await Token.create(studentToken);
+
     attachCookiesToResponse({ res, user: tokenStudent, refreshToken });
+
     res.status(StatusCodes.OK).json({ user: tokenStudent });
-    return;
+  } catch (error) {
+    // Log the error to the console
+    console.error("An error occurred:", error);
+
+    // Send an error response to the frontend
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
   }
-
-  refreshToken = crypto.randomBytes(40).toString("hex");
-  const ip = req.ip;
-  const studentToken = {
-    refreshToken,
-    ip,
-    userAgent,
-    user: student._id,
-    userModel: "Student",
-  };
-
-  await Token.create(studentToken);
-
-  attachCookiesToResponse({ res, user: tokenStudent, refreshToken });
-
-  res.status(StatusCodes.OK).json({ user: tokenStudent });
 };
+
 const studentLogout = async (req, res) => {
   await Token.findOneAndDelete({ user: req.student._id });
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const StudentSchema = new mongoose.Schema(
   {
@@ -63,19 +64,16 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//  Assign studentId before saving
-StudentSchema.pre("save", async function (next) {
-  if (!this.studentId) {
-    // Find and update the counter
-    const counter = await Counter.findOneAndUpdate(
-      { name: "studentId" },
-      { $inc: { value: 1 } }, // Increment the counter
-      { new: true } // Return the updated counter document
-    );
 
-    this.studentId = counter.value;
-  }
-  next();
+StudentSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
+
+StudentSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
+};
 
 module.exports = mongoose.model("Student", StudentSchema);

@@ -25,11 +25,6 @@ const TeacherSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 50,
     },
-    username: {
-      type: String,
-      required: [true, "Please provide username"],
-      minlength: 3,
-    },
     email: {
       type: String,
       unique: true,

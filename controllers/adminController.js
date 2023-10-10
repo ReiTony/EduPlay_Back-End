@@ -120,7 +120,13 @@ const adminLogin = async (req, res) => {
 
   refreshToken = crypto.randomBytes(40).toString("hex");
   const ip = req.ip;
-  const adminToken = { refreshToken, ip, userAgent, user: admin._id, userModel: "Admin" };
+  const adminToken = {
+    refreshToken,
+    ip,
+    userAgent,
+    user: admin._id,
+    userModel: "Admin",
+  };
 
   await Token.create(adminToken);
 
