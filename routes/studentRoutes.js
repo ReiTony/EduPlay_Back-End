@@ -9,7 +9,7 @@ const {
 } = require("../controllers/studentController");
 
 //Student
-router.get("/", authenticateUser, showCurrentStudent);
+router.get("/:id", authenticateUser, showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
 
