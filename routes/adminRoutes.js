@@ -45,10 +45,14 @@ router.get(
   //authorizePermissions("admin"),
   getAllTeachers
 );
-router.get("/showTeacher/:id", //authenticateUser, 
-getSingleTeacher);
-router.patch("/updateTeacher/:id", //authenticateUser, 
-updateTeacher);
+router.get(
+  "/showTeacher/:id", //authenticateUser,
+  getSingleTeacher
+);
+router.patch(
+  "/updateTeacher/:id", //authenticateUser,
+  updateTeacher
+);
 router.patch(
   "/updateTeacherPassword/:id",
   //authenticateUser,

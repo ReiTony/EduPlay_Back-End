@@ -107,7 +107,7 @@ const teacherLogin = async (req, res) => {
       throw new CustomError.UnauthenticatedError("Please verify your email");
     }
 
-    const tokenTeacher = createTokenUser(teacher, userAgent, teacher.gradeLevel);
+    const tokenTeacher = createTokenUser(teacher, userAgent);
 
     let refreshToken = "";
 
