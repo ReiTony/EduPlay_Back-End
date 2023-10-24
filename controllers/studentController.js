@@ -52,7 +52,7 @@ const studentLogin = async (req, res) => {
 
     if (!username || !password) {
       throw new CustomError.BadRequestError(
-        "Please provide email and password"
+        "Please provide username and password"
       );
     }
 
@@ -133,14 +133,15 @@ const getAllStudents = async (req, res) => {
 
 const getSingleStudent = async (req, res) => {
   try {
-    const student = await Student.findOne({ username: req.params.id });
-    //console.log('req.teacher:', req.teacher);
+    const { firstName, lastName } = req.query;
+    const student = await Student.findOne({ firstName, lastName });
+
     if (!student) {
       throw new CustomError.NotFoundError(
-        `No student with username : ${req.params.id}`
+        `No student with firstName: ${firstName} and lastName: ${lastName}`
       );
     }
-    //checkPermissions(req.teacher, student._id);
+
     res.status(StatusCodes.OK).json({ student });
   } catch (error) {
     console.error(error); // Log the error to the console
