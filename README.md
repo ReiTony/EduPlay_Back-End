@@ -57,8 +57,8 @@ The backend server should now be running and accessible at http://localhost:5000
     * /api/v1/Admin: Admin registration and authentication endpoints.
     * /api/v1/Student: Student registration and authentication endpoints.
     * /api/v1/Teacher: Teacher registration and authentication endpoints.
-* Course Management
-* Assignment Tracking
+* Assessment Management
+* Score Tracking
 * Games Integration
   
 
