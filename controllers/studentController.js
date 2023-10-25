@@ -133,12 +133,14 @@ const getAllStudents = async (req, res) => {
 
 const getSingleStudent = async (req, res) => {
   try {
-    const { firstName, lastName } = req.query;
-    const student = await Student.findOne({ firstName, lastName });
+    const student = await Student.findOne({ username: req.params.id });
+    //const { firstName, lastName } = req.query;
+    //const student = await Student.findOne({ firstName, lastName });
 
     if (!student) {
       throw new CustomError.NotFoundError(
-        `No student with firstName: ${firstName} and lastName: ${lastName}`
+        //`No student with firstName: ${firstName} and lastName: ${lastName}`
+        `No student with username : ${req.params.id}`
       );
     }
 
@@ -152,7 +154,18 @@ const getSingleStudent = async (req, res) => {
 };
 
 const showCurrentStudent = async (req, res) => {
-  res.status(StatusCodes.OK).json({ student: req.student });
+  try {
+    const student = await Student.findOne({ id: req.params._id });
+
+    if (!student) {
+      throw new CustomError.NotFoundError(`No student with id : ${req.params._id}`);
+    }
+
+    res.status(StatusCodes.OK).json({ student });
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+  }
 };
 
 const updateStudent = async (req, res) => {
