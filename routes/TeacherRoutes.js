@@ -10,7 +10,7 @@ const {
   getSingleStudent,
   updateStudent,
   deleteStudent,
-  getAllStudents
+  getAllStudents,
 } = require("../controllers/studentController");
 const {
   currentTeacher,
@@ -21,9 +21,14 @@ const {
   teacherForgotPassword,
   teacherResetPassword,
 } = require("../controllers/teacherController");
+const { getClass } = require("../controllers/classController");
 const {
-  getClass
-} = require("../controllers/classController")
+  createAssessment,
+  updateAssessment,
+  deleteAssessment,
+  getAllAssessments,
+  getSingleAssessment,
+} = require("../controllers/assessmentController");
 //Teacher
 router.get("/", authenticateUser, currentTeacher);
 router.post("/register", teacherRegister);
@@ -40,8 +45,14 @@ router.get(
   getAllStudents
 );
 router.post("/addStudent", studentRegister);
-router.get("/showStudent/:id",  getSingleStudent);
-router.patch("/updateStudent/:id",  updateStudent);
+router.get("/showStudent/:id", getSingleStudent);
+router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
+//Teacher Manages Assessments
+router.get("/assessment", getAllAssessments);
+router.get("/assessment/:id", getSingleAssessment);
+router.post("/assessment", createAssessment);
+router.patch("/assessment/:id", updateAssessment);
+router.delete("/assessment/:id", deleteAssessment);
 
 module.exports = router;
