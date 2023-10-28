@@ -1,5 +1,5 @@
-const Assessment = require("../models/Assessment");
-const ProgressReport = require("../models/ProgressReport");
+const Assessment = require("../models/assessmentSchema");
+const ProgressReport = require("../models/progressReportsSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
