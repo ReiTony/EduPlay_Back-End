@@ -6,8 +6,9 @@ const ProgressReportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    moduleId: {
-      type: Number,
+    module: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Module",
       required: true,
     },
     moduleProgress: {
@@ -18,8 +19,9 @@ const ProgressReportSchema = new mongoose.Schema(
     },
     assessmentScores: [
       {
-        assessmentId: {
-          type: Number,
+        assessment: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Assessment",
           required: true,
         },
         score: {
