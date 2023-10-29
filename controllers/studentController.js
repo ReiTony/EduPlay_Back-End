@@ -1,4 +1,5 @@
 const Student = require("../models/studentSchema");
+const ProgressReport = require("../models/progressReportSchema");
 const Token = require("../models/tokenSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
@@ -32,6 +33,11 @@ const studentRegister = async (req, res) => {
       verificationToken,
     });
 
+    const newProgressReport = new ProgressReport({
+      username: newStudent.username,
+    });
+
+    await newProgressReport.save();
     await newStudent.save();
 
     res.status(StatusCodes.CREATED).json({
