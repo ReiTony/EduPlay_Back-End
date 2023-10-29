@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const AssessmentSchema = new mongoose.Schema(
   {
+    assessmentId: {
+      type: Number,
+      unique: true,
+    },
     questions: {
       type: Array,
       default: [],
