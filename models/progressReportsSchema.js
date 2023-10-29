@@ -6,7 +6,7 @@ const ProgressReportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    module: {
+    moduleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Module",
       required: true,
@@ -19,7 +19,7 @@ const ProgressReportSchema = new mongoose.Schema(
     },
     assessmentScores: [
       {
-        assessment: {
+        assessmentId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Assessment",
           required: true,
@@ -30,6 +30,13 @@ const ProgressReportSchema = new mongoose.Schema(
           min: 0,
           max: 100,
         },
+      },
+    ],
+    gameScores: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "GameScore",
+        required: true,
       },
     ],
   },
