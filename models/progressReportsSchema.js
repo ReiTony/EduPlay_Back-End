@@ -2,13 +2,12 @@ const mongoose = require("mongoose");
 
 const ProgressReportSchema = new mongoose.Schema(
   {
-    studentUsername: {
+    username: {
       type: String,
       required: true,
     },
     moduleId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Module",
+      type: Number,
       required: true,
     },
     moduleProgress: {
@@ -20,8 +19,7 @@ const ProgressReportSchema = new mongoose.Schema(
     assessmentScores: [
       {
         assessmentId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Assessment",
+          type: Number,
           required: true,
         },
         score: {
