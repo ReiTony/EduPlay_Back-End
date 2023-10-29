@@ -7,7 +7,6 @@ const createAssessment = async (req, res) => {
   try {
     const { questions, answers, gradeLevel } = req.body;
 
-    // Calculate assessmentId based on the current number of created assessments
     const AssessmentCount = await Assessment.countDocuments({});
     const assessmentId = AssessmentCount + 1;
 
@@ -117,53 +116,10 @@ const deleteAssessment = async (req, res) => {
   }
 };
 
-const recordAssessmentScore = async (req, res) => {
-  try {
-    const { assessmentId } = req.params;
-    const { username, score } = req.body;
-
-    const assessment = await Assessment.findById(assessmentId);
-
-    if (!assessment) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Assessment not found" });
-    }
-
-    // Find or create the associated Progress Report based on student username
-    let progressReport = await ProgressReport.findOne({ username });
-
-    if (!progressReport) {
-      // If a progress report doesn't exist for the student, create a new one
-      progressReport = new ProgressReport({
-        username,
-      });
-    }
-
-    // Add the assessment score to the Progress Report
-    progressReport.assessmentScores.push({
-      assessmentId,
-      score,
-    });
-
-    await progressReport.save();
-
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Assessment score recorded", progressReport });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
-  }
-};
-
 module.exports = {
   createAssessment,
   getAllAssessments,
   getSingleAssessment,
   updateAssessment,
   deleteAssessment,
-  recordAssessmentScore,
 };
