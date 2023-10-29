@@ -120,7 +120,7 @@ const deleteAssessment = async (req, res) => {
 const recordAssessmentScore = async (req, res) => {
   try {
     const { assessmentId } = req.params;
-    const { studentUsername, score } = req.body;
+    const { username, score } = req.body;
 
     const assessment = await Assessment.findById(assessmentId);
 
