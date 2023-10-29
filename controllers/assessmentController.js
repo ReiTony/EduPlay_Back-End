@@ -7,7 +7,12 @@ const createAssessment = async (req, res) => {
   try {
     const { questions, answers, gradeLevel } = req.body;
 
+    // Calculate assessmentId based on the current number of created assessments
+    const AssessmentCount = await Assessment.countDocuments({});
+    const assessmentId = AssessmentCount + 1;
+
     const newAssessment = new Assessment({
+      assessmentId,
       questions,
       answers,
       gradeLevel,
@@ -125,13 +130,13 @@ const recordAssessmentScore = async (req, res) => {
         .json({ message: "Assessment not found" });
     }
 
-    // Find or create the associated Progress Report based on studentUsername
-    let progressReport = await ProgressReport.findOne({ studentUsername });
+    // Find or create the associated Progress Report based on student username
+    let progressReport = await ProgressReport.findOne({ username });
 
     if (!progressReport) {
       // If a progress report doesn't exist for the student, create a new one
       progressReport = new ProgressReport({
-        studentUsername,
+        username,
       });
     }
 
