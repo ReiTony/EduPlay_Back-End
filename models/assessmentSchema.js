@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const AssessmentSchema = new mongoose.Schema(
   {
-    assessmentId: {
+    assessmentNumber: {
       type: Number,
       unique: true,
     },
