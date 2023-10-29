@@ -1,5 +1,4 @@
 const Assessment = require("../models/assessmentSchema");
-const ProgressReport = require("../models/progressReportsSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
@@ -8,10 +7,10 @@ const createAssessment = async (req, res) => {
     const { questions, answers, gradeLevel } = req.body;
 
     const AssessmentCount = await Assessment.countDocuments({});
-    const assessmentId = AssessmentCount + 1;
+    const assessmentNumber = AssessmentCount + 1;
 
     const newAssessment = new Assessment({
-      assessmentId,
+      assessmentNumber,
       questions,
       answers,
       gradeLevel,
