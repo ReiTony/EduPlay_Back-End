@@ -15,6 +15,6 @@ const {
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
-router.post("/assessment/:id", recordAssessmentScore);
+router.post("/assessment/:assessmentId", recordAssessmentScore);
 
 module.exports = router;
