@@ -1,4 +1,4 @@
-const ProgressReport = require("../models/ProgressReportSchema");
+const ProgressReport = require("../models/progressReportsSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 

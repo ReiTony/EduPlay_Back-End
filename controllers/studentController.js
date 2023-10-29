@@ -1,5 +1,5 @@
 const Student = require("../models/studentSchema");
-const ProgressReport = require("../models/progressReportSchema");
+const ProgressReport = require("../models/progressReportsSchema");
 const Token = require("../models/tokenSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
