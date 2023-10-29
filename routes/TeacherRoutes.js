@@ -29,7 +29,13 @@ const {
   getAllAssessments,
   getSingleAssessment,
 } = require("../controllers/assessmentController");
-//Teacher
+const {
+  getProgressReports,
+  getProgressReportByStudent,
+  updateProgressReport,
+} = require("../controllers/progressReportController");
+
+// Teacher
 router.get("/", authenticateUser, currentTeacher);
 router.post("/register", teacherRegister);
 router.post("/login", teacherLogin);
@@ -37,22 +43,24 @@ router.delete("/logout", teacherLogout);
 router.post("/verify-email", teacherVerifyEmail);
 router.post("/reset-password", teacherResetPassword);
 router.post("/forgot-password", teacherForgotPassword);
-//Teacher Manages Student Account with same GradeLevel
-router.get(
-  "/Class",
-  //authenticateUser,
-  //authorizePermissions("teacher"),
-  getAllStudents
-);
+
+// Teacher Manages Student Account with same GradeLevel
+router.get("/Class", getAllStudents);
 router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
-//Teacher Manages Assessments
+
+// Teacher Manages Assessments
 router.get("/assessment", getAllAssessments);
 router.get("/assessment/:assessmentId", getSingleAssessment);
 router.post("/assessment", createAssessment);
 router.patch("/assessment/:assessmentId", updateAssessment);
 router.delete("/assessment/:assessmentId", deleteAssessment);
+
+// Progress Reports
+router.get("/progress-reports", getProgressReports);
+router.get("/progress-report/:username", getProgressReportByStudent);
+router.put("/progress-report/:id", updateProgressReport);
 
 module.exports = router;
