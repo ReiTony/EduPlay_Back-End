@@ -50,9 +50,9 @@ router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
 //Teacher Manages Assessments
 router.get("/assessment", getAllAssessments);
-router.get("/assessment/:id", getSingleAssessment);
+router.get("/assessment/:assessmentId", getSingleAssessment);
 router.post("/assessment", createAssessment);
-router.patch("/assessment/:id", updateAssessment);
-router.delete("/assessment/:id", deleteAssessment);
+router.patch("/assessment/:assessmentId", updateAssessment);
+router.delete("/assessment/:assessmentId", deleteAssessment);
 
 module.exports = router;
