@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ModuleSchema = new mongoose.Schema(
   {
-    moduleId: {
+    moduleNumber: {
       type: Number,
       unique: true,
     },
@@ -20,7 +20,7 @@ const ModuleSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["video", "assessment", "game"],
+      enum: ["video", "assessment", "ppt"],
       required: true,
     },
   },
