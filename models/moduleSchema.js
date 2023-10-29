@@ -14,6 +14,15 @@ const ModuleSchema = new mongoose.Schema(
     date: {
       type: Date,
     },
+    filePath: {
+      type: String, 
+      required: true, 
+    },
+    type: {
+      type: String,
+      enum: ["video", "assessment", "game"],
+      required: true,
+    },
   },
   { timestamps: true }
 );
