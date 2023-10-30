@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const AssessmentSchema = new mongoose.Schema(
   {
@@ -6,14 +6,18 @@ const AssessmentSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
-    questions: {
-      type: Array,
-      default: [],
+    title: {
+      type: String,
+      required: true,
     },
-    answers: {
-      type: Array,
-      default: [],
-    },
+    questions: [{
+      question: String,
+      choices: [String],
+      correctAnswer: Number,
+    }],
+    answers: [{
+      answer: String, 
+    }],
     gradeLevel: {
       type: String,
       enum: ["1", "2", "3"],
