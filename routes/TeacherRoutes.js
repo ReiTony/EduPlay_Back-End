@@ -52,11 +52,11 @@ router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
 
 // Teacher Manages Assessments
-router.get("/assessment", getAllAssessments);
-router.get("/assessment/:assessmentId", getSingleAssessment);
-router.post("/assessment", createAssessment);
-router.patch("/assessment/:assessmentId", updateAssessment);
-router.delete("/assessment/:assessmentId", deleteAssessment);
+router.get("/assessments", getAllAssessments);
+router.get("/getAssessment/:assessmentId", getSingleAssessment);
+router.post("/createAssessment", createAssessment);
+router.patch("/updateAssessment/:assessmentId", updateAssessment);
+router.delete("/deleteAssessment/:assessmentId", deleteAssessment);
 
 // Progress Reports
 router.get("/progress-reports", getProgressReports);
