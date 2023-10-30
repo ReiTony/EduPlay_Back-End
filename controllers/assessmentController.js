@@ -63,11 +63,12 @@ const getSingleAssessment = async (req, res) => {
 const updateAssessment = async (req, res) => {
   try {
     const { assessmentId } = req.params;
-    const { questions, answers, gradeLevel } = req.body;
+    const { title, questions, answers, gradeLevel } = req.body;
 
     const updatedAssessment = await Assessment.findByIdAndUpdate(
       assessmentId,
       {
+        title,
         questions,
         answers,
         gradeLevel,
