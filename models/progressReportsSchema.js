@@ -1,46 +1,56 @@
 const mongoose = require("mongoose");
 
-const ProgressReportSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-    },
-    moduleId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Module",
-      required: true,
-    },
-    moduleProgress: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 100,
-    },
-    assessmentScores: [
-      {
-        assessmentId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Assessment",
-          required: true,
-        },
-        score: {
-          type: Number,
-          required: true,
-          min: 0,
-          max: 100,
-        },
-      },
-    ],
-    gameScores: [
-      {
+const ProgressReportSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  modules: [
+    {
+      moduleId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "GameScore",
+        ref: "Module",
+      },
+      moduleProgress: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  assessmentScores: [
+    {
+      assessmentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Assessment",
+      },
+      score: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  gameScores: [
+    {
+      gameType: {
+        type: String,
         required: true,
       },
-    ],
+      score: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  totalGameScore: {
+    type: Number,
+    default: 0,
   },
-  { timestamps: true }
-);
+  averageAssessmentScore: {
+    type: Number,
+    default: 0,
+  },
+},{timestamps: true});
 
-module.exports = mongoose.model("ProgressReport", ProgressReportSchema);
+const ProgressReport = mongoose.model("ProgressReport", ProgressReportSchema);
+
+module.exports = ProgressReport;
