@@ -17,7 +17,7 @@ const studentRegister = async (req, res) => {
     const password = `${birthMonth}${birthDay}`;
     const verificationToken = crypto.randomBytes(40).toString("hex");
 
-    // Calculate studentId based on the current number of registered students
+    // Counter for studentId
     const studentCount = await Student.countDocuments({});
     const studentId = studentCount + 1;
 
