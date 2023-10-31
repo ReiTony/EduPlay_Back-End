@@ -4,10 +4,7 @@ const CustomError = require("../errors");
 
 const createAssessment = async (req, res) => {
   try {
-    const { title, questions, answers, gradeLevel } = req.body;
-
-    const AssessmentCount = await Assessment.countDocuments({});
-    const assessmentNumber = AssessmentCount + 1;
+    const { title, questions, answers, gradeLevel, assessmentNumber } = req.body;
 
     const newAssessment = new Assessment({
       assessmentNumber,
