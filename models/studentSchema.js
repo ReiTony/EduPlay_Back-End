@@ -4,10 +4,6 @@ const bcrypt = require("bcryptjs");
 
 const StudentSchema = new mongoose.Schema(
   {
-    studentId: {
-      type: Number,
-      unique: true,
-    },
     firstName: {
       type: String,
       required: [true, "Please provide first name"],
