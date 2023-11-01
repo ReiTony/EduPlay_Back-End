@@ -49,7 +49,7 @@ router.get("/Class", getAllStudents);
 router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
-router.delete("/deleteStudent/:id", authenticateUser, deleteStudent);
+router.delete("/deleteStudent/:id", deleteStudent);
 
 // Teacher Manages Assessments
 router.get("/assessments", getAllAssessments);
