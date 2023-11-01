@@ -92,7 +92,6 @@ const teacherLogin = async (req, res) => {
       );
     }
 
-    const userAgent = req.headers["teacher-agent"];
     const teacher = await Teacher.findOne({ email });
 
     if (!teacher) {
@@ -107,7 +106,7 @@ const teacherLogin = async (req, res) => {
       throw new CustomError.UnauthenticatedError("Please verify your email");
     }
 
-    const tokenTeacher = createTokenUser(teacher, userAgent);
+    const tokenTeacher = createTokenUser(teacher);
 
     let refreshToken = "";
 
@@ -125,6 +124,7 @@ const teacherLogin = async (req, res) => {
     }
 
     refreshToken = crypto.randomBytes(40).toString("hex");
+    const userAgent = req.headers["user-agent"];
     const ip = req.ip;
     const teacherToken = {
       refreshToken,

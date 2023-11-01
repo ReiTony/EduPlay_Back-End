@@ -49,7 +49,6 @@ const studentRegister = async (req, res) => {
 const studentLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const userAgent = req.headers["student-agent"];
 
     if (!username || !password) {
       throw new CustomError.BadRequestError(
@@ -69,7 +68,7 @@ const studentLogin = async (req, res) => {
       throw new CustomError.UnauthenticatedError("Invalid Credentials");
     }
 
-    const tokenStudent = createTokenUser(student, userAgent);
+    const tokenStudent = createTokenUser(student);
 
     let refreshToken = "";
 
@@ -88,6 +87,7 @@ const studentLogin = async (req, res) => {
 
     refreshToken = crypto.randomBytes(40).toString("hex");
     const ip = req.ip;
+    const userAgent = req.headers["user-agent"];
     const studentToken = {
       refreshToken,
       ip,
@@ -159,38 +159,64 @@ const showCurrentStudent = async (req, res) => {
     const student = await Student.findOne({ id: req.params._id });
 
     if (!student) {
-      throw new CustomError.NotFoundError(`No student with id : ${req.params._id}`);
+      throw new CustomError.NotFoundError(
+        `No student with id : ${req.params._id}`
+      );
     }
 
     res.status(StatusCodes.OK).json({ student });
   } catch (error) {
     console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
   }
 };
 
 const updateStudent = async (req, res) => {
-  const { lastName, firstName } = req.body;
-  const username = `${lastName}-${firstName}`;
-  if (!lastName || !firstName) {
-    throw new CustomError.BadRequestError("Please provide all values");
+  try {
+    const { lastName, firstName, gradeLevel, birthDay, birthMonth } = req.body;
+    const username = `${lastName}${firstName}`;
+    const password = `${birthMonth}${birthDay}`;
+
+    if (!lastName || !firstName) {
+      throw new CustomError.BadRequestError("Please provide all values");
+    }
+
+    const student = await Student.findOne({ username: req.params.id });
+
+    if (!student) {
+      throw new CustomError.NotFoundError(
+        `No student with username: ${req.params.id}`
+      );
+    }
+
+    student.lastName = lastName;
+    student.firstName = firstName;
+    student.gradeLevel = gradeLevel;
+    student.birthDay = birthDay;
+    student.birthMonth = birthMonth;
+    student.password = password;
+    student.username = username;
+
+    await student.save();
+
+    const tokenStudent = createTokenUser(student);
+    attachCookiesToResponse({ res, student: tokenStudent });
+
+    res.status(StatusCodes.OK).json({ student: tokenStudent, student });
+  } catch (error) {
+    if (error instanceof CustomError.BadRequestError) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    } else if (error instanceof CustomError.NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
+    } else {
+      console.error("An error occurred:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal server error" });
+    }
   }
-  const student = await Student.findOne({ username: req.params.id });
-
-  if (!student) {
-    throw new CustomError.NotFoundError(
-      `No student with username : ${req.params.id}`
-    );
-  }
-
-  student.lastName = lastName;
-  student.firstName = firstName;
-  student.username = username;
-  await student.save();
-
-  const tokenStudent = createTokenUser(student);
-  attachCookiesToResponse({ res, student: tokenStudent });
-  res.status(StatusCodes.OK).json({ student: tokenStudent, student });
 };
 
 const deleteStudent = async (req, res) => {
