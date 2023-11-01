@@ -44,8 +44,8 @@ const StudentSchema = new mongoose.Schema(
         "https://res.cloudinary.com/diverse/image/upload/v1674562453/diverse/oipm1ecb1yudf9eln7az.jpg",
     },
     gradeLevel: {
-      type: String,
-      enum: ["1", "2", "3"],
+      type: Number,
+      enum: [1, 2, 3],
       required: true,
     },
     verificationToken: String,
