@@ -9,6 +9,16 @@ const helmet = require('helmet');
 const cors = require('cors');
 const multer = require('multer');
 
+// Configure CORS
+const corsOptions = {
+  origin: "http://localhost:5173", 
+  credentials: true, 
+};
+
+// Socket.io
+const initWebSocketServer = require("./websocket/connect");
+const { server, io } = initWebSocketServer(app);
+
 //database
 const connectDB = require("./db/connect");
 
@@ -21,7 +31,7 @@ const studentRouter = require('./routes/studentRoutes');
 const notFoundMiddleware = require("./middleware/not_found");
 const errorHandlerMiddleware = require("./middleware/error_handler");
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 
 app.use(express.static('./public'));
