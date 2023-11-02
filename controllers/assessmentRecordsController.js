@@ -1,6 +1,7 @@
 const Student = require("../models/studentSchema");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
 const { getModuleSync } = require("./moduleController");
+const { saveBadges } = require("./badgeController");
 
 const createAssessmentRecord = async (req, res) => {
   try {
@@ -11,7 +12,7 @@ const createAssessmentRecord = async (req, res) => {
     const module = getModuleSync(moduleNumber, student.gradeLevel, "assessment");
     if (module.questions.length !== answers.length) return res.status(400).json({ message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.` });
     let score = 0;
-    const badges = new Array(module.categories.length).fill(null).map(() => ({ score: 0, total: 0 }));
+    const badges = module.categories.map((i) => ({category: i, score: 0, total: 0}));
     for (let i = 0; i < module.questions.length; i++) {
       if (module.questions[i].correctAnswer === answers[i]) {
         score++;
@@ -19,6 +20,7 @@ const createAssessmentRecord = async (req, res) => {
       }
       badges[module.questions[i].category].total++;
     }
+    await saveBadges(userId, badges);
     const newAssessmentRecord = new AssessmentRecord({ studentId: userId, score: score, moduleNumber, gradeLevel: student.gradeLevel, answers });
     await newAssessmentRecord.save();
     res.status(200).json({ message: "Success" });
