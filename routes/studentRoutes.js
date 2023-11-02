@@ -16,7 +16,7 @@ const { getStudentModule, getSummary } = require("../controllers/moduleControlle
 
 // Student
 router.get("/module", getStudentModule)
-router.get("/module-summary", getSummarygit)
+router.get("/module-summary", getSummary)
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
