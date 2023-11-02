@@ -132,7 +132,7 @@ const teacherLogin = async (req, res) => {
       userAgent,
       gradeLevel: teacher.gradeLevel,
       user: teacher._id,
-      userModel: "Teacher"
+      userModel: "Teacher",
     };
 
     await Token.create(teacherToken);
@@ -147,18 +147,34 @@ const teacherLogin = async (req, res) => {
   }
 };
 
-const teacherLogout = async (req, res) => {
-  await Token.findOneAndDelete({ teacher: req.teacher.teacherId });
+const teacherLogout = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new CustomError.UnauthenticatedError("User not authenticated");
+    }
 
-  res.cookie("accessToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.cookie("refreshToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.status(StatusCodes.OK).json({ msg: "teacher logged out!" });
+    console.log("User object:", req.user);
+    //console.log('User ID:', req.user.user.userId);
+    const tokenToDelete = req.user.user.userId;
+    const deletedToken = await Token.findOneAndDelete({ user: tokenToDelete });
+
+    if (!deletedToken) {
+      console.log("Token not found");
+    } else {
+      console.log("Deleted token:", deletedToken);
+      console.log("Token deleted successfully");
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    console.log("Cookies cleared successfully");
+
+    res.status(StatusCodes.OK).json({ msg: "Teacher logged out!" });
+  } catch (error) {
+    console.error("Error during teacher logout:", error);
+    next(error);
+  }
 };
 
 const teacherForgotPassword = async (req, res) => {

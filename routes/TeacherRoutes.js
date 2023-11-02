@@ -39,7 +39,7 @@ const {
 router.get("/", authenticateUser, currentTeacher);
 router.post("/register", teacherRegister);
 router.post("/login", teacherLogin);
-router.delete("/logout", teacherLogout);
+router.delete("/logout", authenticateUser, teacherLogout);
 router.post("/verify-email", teacherVerifyEmail);
 router.post("/reset-password", teacherResetPassword);
 router.post("/forgot-password", teacherForgotPassword);
