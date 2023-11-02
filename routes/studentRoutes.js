@@ -12,8 +12,11 @@ const {
   recordModuleProgress,
   recordGameScore,
 } = require("../controllers/recordController");
+const { getStudentModule, getSummary } = require("../controllers/moduleController");
 
 // Student
+router.get("/module", getStudentModule)
+router.get("/module-summary", getSummarygit )
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
