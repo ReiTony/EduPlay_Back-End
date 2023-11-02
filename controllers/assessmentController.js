@@ -1,10 +1,12 @@
 const Assessment = require("../models/assessmentSchema");
+const Notification = require("../models/notificationSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
 const createAssessment = async (req, res) => {
   try {
-    const { title, questions, answers, gradeLevel, assessmentNumber } = req.body;
+    const { title, questions, answers, gradeLevel, assessmentNumber } =
+      req.body;
 
     const newAssessment = new Assessment({
       assessmentNumber,
@@ -15,6 +17,15 @@ const createAssessment = async (req, res) => {
     });
 
     await newAssessment.save();
+
+    // Create notification
+    const notificationMessage = `A new custom assessment named "${title}" has been uploaded to your learning group`;
+    const notification = new Notification({
+      message: notificationMessage,
+      assessment: newAssessment._id,
+      gradeLevel,
+    });
+    await notification.save();
 
     res.status(StatusCodes.CREATED).json({
       msg: "Success! Assessment Created",
