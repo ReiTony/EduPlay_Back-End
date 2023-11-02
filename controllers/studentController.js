@@ -3,11 +3,7 @@ const ProgressReport = require("../models/progressReportsSchema");
 const Token = require("../models/tokenSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const {
-  attachCookiesToResponse,
-  createTokenUser,
-  checkPermissions,
-} = require("../utils");
+const { attachCookiesToResponse, createTokenUser } = require("../utils");
 const crypto = require("crypto");
 
 const studentRegister = async (req, res) => {
@@ -112,18 +108,34 @@ const studentLogin = async (req, res) => {
   }
 };
 
-const studentLogout = async (req, res) => {
-  await Token.findOneAndDelete({ user: req.student._id });
+const studentLogout = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new CustomError.UnauthenticatedError("User not authenticated");
+    }
 
-  res.cookie("accessToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.cookie("refreshToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.status(StatusCodes.OK).json({ msg: "student logged out!" });
+    console.log("User object:", req.user);
+    //console.log('User ID:', req.user.user.userId);
+    const tokenToDelete = req.user.user.userId;
+    const deletedToken = await Token.findOneAndDelete({ user: tokenToDelete });
+
+    if (!deletedToken) {
+      console.log("Token not found");
+    } else {
+      console.log("Deleted token:", deletedToken);
+      console.log("Token deleted successfully");
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    console.log("Cookies cleared successfully");
+
+    res.status(StatusCodes.OK).json({ msg: "Student logged out!" });
+  } catch (error) {
+    console.error("Error during student logout:", error);
+    next(error);
+  }
 };
 
 const getAllStudents = async (req, res) => {
