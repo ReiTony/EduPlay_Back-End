@@ -7,17 +7,12 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
-const multer = require('multer');
 
 // Configure CORS
 const corsOptions = {
   origin: "http://localhost:5173", 
   credentials: true, 
 };
-
-// Socket.io
-const initWebSocketServer = require("./websocket/connect");
-const { server, io } = initWebSocketServer(app);
 
 //database
 const connectDB = require("./db/connect");
