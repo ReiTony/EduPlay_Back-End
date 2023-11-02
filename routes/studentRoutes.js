@@ -13,10 +13,12 @@ const {
   recordGameScore,
 } = require("../controllers/recordController");
 const { getStudentModule, getSummary } = require("../controllers/moduleController");
+const { createAssessmentRecord } = require("../controllers/assessmentRecordsController");
 
 // Student
 router.get("/module", getStudentModule)
 router.get("/module-summary", getSummary)
+router.post("/assessment-record", createAssessmentRecord);
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
