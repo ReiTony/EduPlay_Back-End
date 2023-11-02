@@ -1,0 +1,27 @@
+{
+  "title": "Word Hunt: Changes in Matter",
+  "type": "Word Hunt",
+  "puzzle": [
+    ["A", "S", "U", "N", "L", "F", "L", "O", "W"],
+    ["F", "U", "P", "K", "G", "P", "I", "X", "B"],
+    ["G", "R", "O", "I", "E", "A", "Q", "A", "V"],
+    ["O", "F", "M", "S", "J", "T", "U", "H", "O"],
+    ["G", "A", "S", "S", "G", "P", "I", "V", "L"],
+    ["I", "C", "G", "B", "X", "V", "D", "C", "U"],
+    ["E", "E", "B", "V", "W", "O", "D", "P", "M"],
+    ["C", "S", "T", "E", "X", "T", "U", "R", "E"],
+    ["Z", "I", "A", "B", "I", "C", "S", "E", "O"],
+    ["T", "E", "T", "O", "D", "I", "L", "O", "S"]
+  ],
+  "answers": ["0,9 0,6", "5,7 0,7", "7,9 2,9", "7,9 7,3", "9,5 9,9", "4,3 4,1", "6,2 0,2"],
+  "clues": [
+    "Solid - a state of matter that has a definite shape, size, and volume.",
+    "Liquid - a state of matter that does not have definite shape and size but has definite volume.",
+    "Gas - a state of matter that does not have definite volume and shape.",
+    "Flow - this is an ability that a liquid has.",
+    "Volume - amount of space that an object occupies.",
+    "Texture - the feel or appearance of the surface of an object. Different solids may have smooth or rough textures.",
+    "Surface - The outer part or appearance of an object."
+  ],
+  "tts": "Welcome to the exciting Word Hunt game! Let's get started! In this word hunt, your mission is to find hidden words like solid, liquid, gas, flow, volume, texture, and surface."
+}

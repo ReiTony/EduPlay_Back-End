@@ -1,0 +1,66 @@
+{
+  "title": "Assessment: Characteristics & Grouping of Materials",
+  "categories": ["Shape", "Mass", "Volume", "Color", "Ability to Flow"],
+  "questions": [
+    {
+      "question": "Which one has a different shape?",
+      "choices": ["Basketball", "Globe", "Marble", "Box"],
+      "correctAnswer": 3,
+      "category": 0
+    },
+    {
+      "question": "Which object is heavier than a book?",
+      "choices": ["Feather", "Balloon", "Chair", "Pencil"],
+      "correctAnswer": 2,
+      "category": 1
+    },
+    {
+      "question": "Which occupies the most space?",
+      "choices": ["Apple", "Watermelon", "Banana", "Banana"],
+      "correctAnswer": 1,
+      "category": 2
+    },
+    {
+      "question": "Which one has a different color?",
+      "choices": ["Grass", "Corn", "Cheese", "Sun"],
+      "correctAnswer": 0,
+      "category": 3
+    },
+    {
+      "question": "Which object has no definite shape?",
+      "choices": ["Sand", "Water", "Clothes", "Bread"],
+      "correctAnswer": 1,
+      "category": 0
+    },
+    {
+      "question": "It is the ability of an object to move in a continuous way.",
+      "choices": ["Flow", "Wind", "Smooth", "Air"],
+      "correctAnswer": 0,
+      "category": 4
+    },
+    {
+      "question": "Oil takes the shape of its container.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "A weighing scale can measure an object's mass.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 1
+    },
+    {
+      "question": "Volume is the amount of space an object occupies.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 2
+    },
+    {
+      "question": "Grass, frogs, and bananas all have the same color.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 3
+    }
+  ]
+}

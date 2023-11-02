@@ -1,0 +1,26 @@
+{
+  "title": "4Pics 1Word: Living and Nonliving Things",
+  "type": "4pics1word",
+  "rounds": [
+    {
+      "imagePath": "https://drive.google.com/uc?id=1G01vFj20El9HH2B7hAkd7DUUA8wyYivw",
+      "answer": "Human"
+    },
+    {
+      "imagePath": "https://drive.google.com/uc?id=1TICWllJKtA4ZWMWiwTOQtHAEwCA9Q9Bz",
+      "answer": "Animal"
+    },
+    {
+      "imagePath": "https://drive.google.com/uc?id=1G-L-c3Giqllme5dNYxH1wbzpUH6kCUUC",
+      "answer": "Car"
+    },
+    {
+      "imagePath": "https://drive.google.com/uc?id=13Jwlyfpm0E6kjSEHxJd8l0XG5yDvMaen",
+      "answer": "Pencil"
+    },
+    {
+      "imagePath": "https://drive.google.com/uc?id=1XV5iphfZeydwHlP-Zth6MqAiE6LaXz8B",
+      "answer": "Plant"
+    }
+  ]
+}

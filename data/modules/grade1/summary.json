@@ -1,0 +1,40 @@
+[
+  {
+    "title": "Describing & Comparing of Materials",
+    "number": 1,
+    "submodules": [
+      {
+        "title": "Module Lecture: Describing and Comparing Materials",
+        "locked": false,
+        "src": "https://drive.google.com/file/d/1d7-U-PaKvNx1aQpTPvZ-BCU2q7LZqtjs/preview"
+      },
+      {
+        "title": "Module Review: Describing and Comparing Materials",
+        "locked": true
+      },
+      {
+        "title": "Module Game: Describing and Comparing Materials",
+        "locked": true
+      }
+    ]
+  },
+  {
+    "title": "Living and Nonliving Things",
+    "number": 2,
+    "submodules": [
+      {
+        "title": "Module Lecture: Living and Nonliving Things",
+        "locked": false,
+        "src": "https://drive.google.com/file/d/1wbf4KsnIXHQTAtOGKQ24VMPII73UgLlB/preview"
+      },
+      {
+        "title": "Module Review: Living and Nonliving Things",
+        "locked": true
+      },
+      {
+        "title": "Module Game: Living and Nonliving Things",
+        "locked": true
+      }
+    ]
+  }
+]

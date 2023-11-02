@@ -1,0 +1,30 @@
+{
+  "title": "Word Hunt: Describing and Comparing Materials",
+  "type": "Word Hunt",
+  "puzzle": [
+    ["A", "R", "O", "U", "N", "D", "W", "H", "M"],
+    ["L", "T", "E", "X", "T", "U", "R", "E", "A"],
+    ["I", "B", "F", "C", "K", "O", "A", "C", "S"],
+    ["H", "C", "G", "O", "J", "E", "Z", "I", "S"],
+    ["H", "Y", "E", "L", "L", "O", "W", "B", "A"],
+    ["T", "D", "E", "O", "V", "J", "E", "R", "I"],
+    ["O", "D", "G", "R", "J", "T", "A", "L", "L"],
+    ["O", "S", "I", "Z", "A", "O", "O", "C", "C"],
+    ["M", "A", "E", "R", "U", "S", "A", "E", "M"],
+    ["S", "Q", "U", "A", "R", "E", "G", "S", "Y"]
+  ],
+  "answers": ["0,6 0,1", "1,8 1,2", "3,9 0,9", "4,1 9,1", "9,6 9,1", "8,3 8,9", "4,7 4,2", "6,4 2,4", "6,9 6,6", "3,6 3,9", "0,6 0,2"],
+  "clues": [
+    "Texture - Texture describes how the surface of an object feels.",
+    "Mass - Mass describes how light or heavy an object is.",
+    "Size - Materials have different sizes, some are big and some are small.",
+    "Color - Color is what you see when you look at something, like red or blue.",
+    "Yellow - Yellow is a bright color seen in bananas or the sun.",
+    "Round - Round is when an object is shaped like a circle, like a ball or coconut.",
+    "Smooth - Smooth is a texture observed in objects with an even surface, like mirrors and shirts.",
+    "Square - Square is a shape that has 4 equal sides, like a box or dice.",
+    "Tall - Tall is a measure when an object's height is higher than others.",
+    "Measure - Measure is finding out how long, tall, or heavy something is using tools like a ruler or a scale."
+  ],
+  "tts": "Welcome to the exciting Word Hunt game! Let's get started! In this word hunt, your mission is to find hidden words like texture, mass, size, color, yellow, round, smooth, square, tall, and measure."
+}
