@@ -14,8 +14,10 @@ const {
 } = require("../controllers/recordController");
 const { getStudentModule, getSummary } = require("../controllers/moduleController");
 const { createAssessmentRecord } = require("../controllers/assessmentRecordsController");
+const { getAllAssessments } = require("../controllers/assessmentController");
 
 // Student
+router.get("/assessment", getAllAssessments)
 router.get("/module", getStudentModule)
 router.get("/module-summary", getSummary)
 router.post("/assessment-record", createAssessmentRecord);

@@ -4,10 +4,10 @@ const CustomError = require("../errors");
 
 const createAssessment = async (req, res) => {
   try {
-    const { title, questions, answers, gradeLevel, assessmentNumber } = req.body;
+    const { title, questions, answers, gradeLevel, moduleNumber } = req.body;
 
     const newAssessment = new Assessment({
-      assessmentNumber,
+      moduleNumber,
       title,
       questions,
       answers,
@@ -27,8 +27,11 @@ const createAssessment = async (req, res) => {
 
 const getAllAssessments = async (req, res) => {
   try {
-    const assessments = await Assessment.find();
-    res.status(StatusCodes.OK).json({ assessments });
+    const { gradeLevel, id } = req.query;
+    let assessments = {};
+    if (gradeLevel) assessments = await Assessment.find({gradeLevel});
+    else if (id) assessments = await Assessment.findById(id);
+    res.status(StatusCodes.OK).json(assessments);
   } catch (error) {
     console.error(error);
     throw new CustomError.InternalServerError("Failed to fetch assessments");
@@ -41,9 +44,7 @@ const getSingleAssessment = async (req, res) => {
     const assessment = await Assessment.findById(assessmentId);
 
     if (!assessment) {
-      throw new CustomError.NotFoundError(
-        `No assessment with ID: ${assessmentId}`
-      );
+      throw new CustomError.NotFoundError(`No assessment with ID: ${assessmentId}`);
     }
 
     res.status(StatusCodes.OK).json({ assessment });
@@ -74,9 +75,7 @@ const updateAssessment = async (req, res) => {
     );
 
     if (!updatedAssessment) {
-      throw new CustomError.NotFoundError(
-        `No assessment with ID: ${assessmentId}`
-      );
+      throw new CustomError.NotFoundError(`No assessment with ID: ${assessmentId}`);
     }
 
     res.status(StatusCodes.OK).json({ assessment: updatedAssessment });
@@ -96,14 +95,10 @@ const deleteAssessment = async (req, res) => {
     const deletedAssessment = await Assessment.findByIdAndDelete(assessmentId);
 
     if (!deletedAssessment) {
-      throw new CustomError.NotFoundError(
-        `No assessment with ID: ${assessmentId}`
-      );
+      throw new CustomError.NotFoundError(`No assessment with ID: ${assessmentId}`);
     }
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Assessment deleted successfully" });
+    res.status(StatusCodes.OK).json({ message: "Assessment deleted successfully" });
   } catch (error) {
     console.error(error);
     if (error instanceof CustomError.NotFoundError) {
