@@ -34,6 +34,7 @@ const {
   getProgressReportByStudent,
   updateProgressReport,
 } = require("../controllers/progressReportController");
+const { getCustomAssessmentAnalysis } = require("../controllers/customAssessmentRecordController");
 
 // Teacher
 router.get("/", authenticateUser, currentTeacher);
@@ -50,6 +51,9 @@ router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
+
+// Custom Assesment
+router.get("/custom-assessment", getCustomAssessmentAnalysis);
 
 // Teacher Manages Assessments
 router.get("/assessments", getAllAssessments);

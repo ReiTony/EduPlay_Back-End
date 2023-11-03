@@ -12,11 +12,17 @@ const {
   recordModuleProgress,
   recordGameScore,
 } = require("../controllers/recordController");
-const {
-  getAssessmentsGradeLevel,
-} = require("../controllers/assessmentController");
+const { getStudentModule, getSummary } = require("../controllers/moduleController");
+const { createAssessmentRecord } = require("../controllers/assessmentRecordsController");
+const { getAllAssessments, getAssessmentsGradeLevel } = require("../controllers/assessmentController");
+const { createCustomAssessmentRecord } = require("../controllers/customAssessmentRecordController");
 
 // Student
+router.get("/assessment", getAllAssessments)
+router.get("/module", getStudentModule)
+router.get("/module-summary", getSummary)
+router.post("/assessment-record", createAssessmentRecord);
+router.post("/custom-assessment-record", createCustomAssessmentRecord)
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);

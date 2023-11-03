@@ -1,0 +1,66 @@
+{
+  "title": "Assessment: Living and Nonliving Things",
+  "categories": ["Living Things", "Non-Living Things"],
+  "questions": [
+    {
+      "question": "Which cannot be done by humans?",
+      "choices": ["Grow", "Reproduce", "Swim", "Fly"],
+      "correctAnswer": 3,
+      "category": 0
+    },
+    {
+      "question": "A tadpole can _____ into an adult frog.",
+      "choices": ["Grow", "Reproduce", "Move", "Run"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "It is when you react to something that happens.",
+      "choices": ["Happy", "Respond", "Grow", "Sad"],
+      "correctAnswer": 1,
+      "category": 0
+    },
+    {
+      "question": "These are the soft coverings of a bird's body.",
+      "choices": ["Skin", "Scales", "Beak", "Feather"],
+      "correctAnswer": 3,
+      "category": 1
+    },
+    {
+      "question": "Which object is not made out of wood?",
+      "choices": ["Table", "Chair", "Soil", "House"],
+      "correctAnswer": 2,
+      "category": 1
+    },
+    {
+      "question": "It is used to create clothes and dresses.",
+      "choices": ["Stone", "Silk", "Water", "Leaves"],
+      "correctAnswer": 1,
+      "category": 1
+    },
+    {
+      "question": "Living things don't need to drink water.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 0
+    },
+    {
+      "question": "Living things can reproduce and make babies.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "Non-living things can sense and respond to their environment.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 1
+    },
+    {
+      "question": "Plants are an example of non-living things.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 1
+    }
+  ]
+}

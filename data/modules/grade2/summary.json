@@ -1,0 +1,40 @@
+[
+  {
+    "title": "Characteristics & Grouping of Materials",
+    "number": 1,
+    "submodules": [
+      {
+        "title": "Module Lecture: Characteristics and Groupings of Materials",
+        "locked": false,
+        "src": "https://drive.google.com/file/d/1z2L0g1PDWB5tvAzwOT9O2C4tIEPp9DL8/preview"
+      },
+      {
+        "title": "Module Review: Characteristics and Groupings of Materials",
+        "locked": true
+      },
+      {
+        "title": "Module Game: Characteristics and Groupings of Materials",
+        "locked": true
+      }
+    ]
+  },
+  {
+    "title": "Living and Nonliving Things",
+    "number": 2,
+    "submodules": [
+      {
+        "title": "Module Lecture: Living and Nonliving Things",
+        "locked": false,
+        "src": "https://drive.google.com/file/d/13oIgGm7aRRTJITAC6SGjrgJW6MsWA0cZ/preview"
+      },
+      {
+        "title": "Module Review: Living and Nonliving Things",
+        "locked": true
+      },
+      {
+        "title": "Module Game: Living and Nonliving Things",
+        "locked": true
+      }
+    ]
+  }
+]

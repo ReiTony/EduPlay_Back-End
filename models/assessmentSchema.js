@@ -2,9 +2,9 @@ const mongoose = require("mongoose")
 
 const AssessmentSchema = new mongoose.Schema(
   {
-    assessmentNumber: {
+    moduleNumber: {
       type: Number,
-      unique: true,
+      required: true
     },
     title: {
       type: String,

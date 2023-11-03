@@ -1,0 +1,40 @@
+[
+  {
+    "title": "States of Matter",
+    "number": 1,
+    "submodules": [
+      {
+        "title": "Module Lecture:  States of Matter",
+        "locked": false,
+        "src": "https://drive.google.com/file/d/1BaBDnabQb4yM59a_0Fubk6ND8LbqgMV0/preview"
+      },
+      {
+        "title": "Module Review:  States of Matter",
+        "locked": true
+      },
+      {
+        "title": "Module Game:  States of Matter",
+        "locked": true
+      }
+    ]
+  },
+  {
+    "title": "Changes in Matter",
+    "number": 2,
+    "submodules": [
+      {
+        "title": "Module Lecture: Changes in Matter",
+        "locked": false,
+        "src": "https://drive.google.com/file/d/1eqv2emgxq1TdiUKAX5X_lf4bFOPbvw0Z/preview"
+      },
+      {
+        "title": "Module Review: Changes in Matter",
+        "locked": true
+      },
+      {
+        "title": "Module Game: Changes in Matter",
+        "locked": true
+      }
+    ]
+  }
+]

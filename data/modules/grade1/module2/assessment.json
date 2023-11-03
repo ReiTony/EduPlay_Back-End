@@ -1,0 +1,66 @@
+{
+  "title": "Assessment: Living and Nonliving Things",
+  "categories": ["Living Things", "Non-Living Things"],
+  "questions": [
+    {
+      "question": "What does a living thing not need to live?",
+      "choices": ["Air", "Water", "Sunlight", "Toys"],
+      "correctAnswer": 3,
+      "category": 0
+    },
+    {
+      "question": "Which animal is capable of flying?",
+      "choices": ["Fish", "Bird", "Dog", "Penguin"],
+      "correctAnswer": 1,
+      "category": 0
+    },
+    {
+      "question": "An animal that is caught and eaten by another animal.",
+      "choices": ["Prey", "Plant", "Food", "Snack"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "Which is not an example of a living thing?",
+      "choices": ["Humans", "Animals", "Plants", "Train"],
+      "correctAnswer": 3,
+      "category": 1
+    },
+    {
+      "question": "Which is a non-living thing found in nature?",
+      "choices": ["Air", "House", "Eraser", "Table"],
+      "correctAnswer": 0,
+      "category": 1
+    },
+    {
+      "question": "What do you call things that are not alive?",
+      "choices": ["Living Things", "Non-living Things", "Dolls", "Toys"],
+      "correctAnswer": 0,
+      "category": 1
+    },
+    {
+      "question": "A plant is a living thing.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "Living things cannot grow.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 0
+    },
+    {
+      "question": "Water is a non-living thing.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 1
+    },
+    {
+      "question": "Non-living things can breathe.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 1
+    }
+  ]
+}

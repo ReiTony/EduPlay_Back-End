@@ -1,0 +1,66 @@
+{
+  "title": "Assessment: States of Matter",
+  "categories": ["Solid", "Liquid", "Gas"],
+  "questions": [
+    {
+      "question": "What state of matter has a definite shape, size, and volume?",
+      "choices": ["Solid", "Liquid", "Gas", "Air"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "What solid will break into pieces when dropped?",
+      "choices": ["Paper", "Glass", "Steel", "Eraser"],
+      "correctAnswer": 1,
+      "category": 0
+    },
+    {
+      "question": "What state of matter has a definite volume and can flow?",
+      "choices": ["Solid", "Liquid", "Gas", "Air"],
+      "correctAnswer": 1,
+      "category": 1
+    },
+    {
+      "question": "What is the most common liquid?",
+      "choices": ["Medicine", "Shampoo", "Juice", "Water"],
+      "correctAnswer": 3,
+      "category": 1
+    },
+    {
+      "question": "What state of matter can expand and flow?",
+      "choices": ["Solid", "Liquid", "Gas", "Air"],
+      "correctAnswer": 2,
+      "category": 2
+    },
+    {
+      "question": "What is the gas that people and animals breathe out?",
+      "choices": ["Carbon Dioxide", "Oxygen", "Helium", "LPG"],
+      "correctAnswer": 0,
+      "category": 2
+    },
+    {
+      "question": "Steel is used for making many sharp objects.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 0
+    },
+    {
+      "question": "Drink liquids without carefully checking if it's safe.",
+      "choices": ["True", "False"],
+      "correctAnswer": 1,
+      "category": 1
+    },
+    {
+      "question": "Tell an adult if you smell gas near an LPG tank.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 2
+    },
+    {
+      "question": "Never take any medicine without the supervision of an adult.",
+      "choices": ["True", "False"],
+      "correctAnswer": 0,
+      "category": 1
+    }
+  ]
+}
