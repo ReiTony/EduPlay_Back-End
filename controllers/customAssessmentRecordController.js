@@ -19,20 +19,25 @@ const createCustomAssessmentRecord = async (req, res) => {
 
 const getCustomAssessmentAnalysis = async (req, res) => {
   try {
-    const { assessment } = req.query;
-    const records = await CustomAssessmentRecord.find({ assessment }).lean();
-    const foundAssessment = await Assessment.findById(assessment).lean();
-    if (!foundAssessment) return res.status(404).json({ message: "Assessment not found!" });
-    for (let i = 0; i < foundAssessment.questions.length; i++) {
-      let total = 0;
-      let correct = 0;
-      records.forEach((record) => {
-        if (record.answers[i] === foundAssessment.questions[i].correctAnswer) correct++;
-        total++;
-      });
-      foundAssessment.questions[i].analysis = Math.round((correct / total) * 100);
+    const allAssessments = await Assessment.find({}).lean();
+    let analysis = [];
+    for (const assessment of allAssessments) {
+      const records = await CustomAssessmentRecord.find({ assessment: assessment._id }).lean();
+      for (let i = 0; i < assessment.questions.length; i++) {
+        let total = 0;
+        let correct = 0;
+        records.forEach((record) => {
+          if (record.answers[i] === assessment.questions[i].correctAnswer) correct++;
+          total++;
+        });
+        assessment.questions[i].correct = correct;
+        assessment.questions[i].total = total;
+        if (total === 0) assessment.questions[i].analysis = 0;
+        else assessment.questions[i].analysis = Math.round((correct / total) * 100);
+      }
+      analysis.push(assessment);
     }
-    res.status(200).json({ message: "Success", request: foundAssessment });
+    res.status(200).json({ message: "Success", request: analysis });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
