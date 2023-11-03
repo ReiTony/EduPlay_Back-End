@@ -12,11 +12,17 @@ const {
   recordModuleProgress,
   recordGameScore,
 } = require("../controllers/recordController");
+const {
+  getAssessmentsGradeLevel,
+} = require("../controllers/assessmentController");
 
 // Student
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
+
+// Assessment
+router.get("/getAssessmentByGrade/:id", getAssessmentsGradeLevel);
 
 // Record
 router.post("/assessment/:assessmentId", recordAssessmentScore);
