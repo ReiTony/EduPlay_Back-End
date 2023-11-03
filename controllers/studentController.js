@@ -6,6 +6,7 @@ const CustomError = require("../errors");
 const { attachCookiesToResponse, createTokenUser } = require("../utils");
 const crypto = require("crypto");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
+const Notification = require("../models/notificationSchema");
 
 const studentRegister = async (req, res) => {
   try {
@@ -169,23 +170,32 @@ const getSingleStudent = async (req, res) => {
 
 const showCurrentStudent = async (req, res) => {
   try {
-    const student = await Student.findById( req.params.id ).lean();
-    const assessmentRecords = await AssessmentRecord.find({ studentId: req.params.id })
+    const studentId = req.params.id;
+    const student = await Student.findById(studentId).lean();
 
     if (!student) {
-      throw new CustomError.NotFoundError(
-        `No student with id : ${req.params._id}`
-      );
+      throw new CustomError.NotFoundError(`No student with id: ${studentId}`);
     }
 
-    res.status(StatusCodes.OK).json({...student, assessmentRecords});
+    const gradeLevel = student.gradeLevel;
+    const recepient = student.studentId
+    console.log(`Grade Level: ${gradeLevel}`);
+    
+    const assessmentRecords = await AssessmentRecord.find({ studentId: studentId });
+    const notifications = await Notification
+      .find({ recipient: recepient, gradeLevel: gradeLevel })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    console.log(`Notifications:`, notifications);
+
+    res.status(StatusCodes.OK).json({ ...student, assessmentRecords, notifications });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
   }
 };
+
 
 const updateStudent = async (req, res) => {
   try {
