@@ -1,11 +1,12 @@
 const Student = require("../models/studentSchema");
+const Notification = require("../models/notificationSchema");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
 const { getModuleSync } = require("./moduleController");
 
 const createAssessmentRecord = async (req, res) => {
   try {
-    const { moduleNumber, userId, answers } = req.body;
-    if (!moduleNumber || !userId || !answers) return res.status(400).json({ message: "moduleNumber, userId, and answers are required." });
+    const { title, moduleNumber, userId, answers } = req.body;
+    if (!moduleNumber || !userId || !answers) return res.status(400).json({ message: " title, moduleNumber, userId, and answers, are required." });
     const student = await Student.findById(userId);
     if (!student) return res.status(404).json({ message: "Student not found" });
     if ((await AssessmentRecord.find({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber })).length > 0) return res.status(400).json({ message: "You have already taken this assessment!" });
@@ -17,6 +18,15 @@ const createAssessmentRecord = async (req, res) => {
     }, 0);
     const newAssessmentRecord = new AssessmentRecord({ studentId: userId, score: score, moduleNumber, gradeLevel: student.gradeLevel, answers, total: module.questions.length });
     await newAssessmentRecord.save();
+
+       // Create notification
+       const notificationMessage = `You scored ${score}/${module.questions.length} in "${title}"`;
+       const notification = new Notification({
+         message: notificationMessage,
+         recipient: userId,
+       });
+       await notification.save();
+
     res.status(200).json({ message: "Success", score });
   } catch (error) {
     console.log(error.message);
