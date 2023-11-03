@@ -5,7 +5,7 @@ const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { attachCookiesToResponse, createTokenUser } = require("../utils");
 const crypto = require("crypto");
-const Badge = require("../models/badgeSchema");
+const AssessmentRecord = require("../models/assessmentRecordsSchema");
 
 const studentRegister = async (req, res) => {
   try {
@@ -170,7 +170,7 @@ const getSingleStudent = async (req, res) => {
 const showCurrentStudent = async (req, res) => {
   try {
     const student = await Student.findById( req.params.id ).lean();
-    const badges = await Badge.find({ studentId: req.params.id }).lean();
+    const assessmentRecords = await AssessmentRecord.find({ studentId: req.params.id })
 
     if (!student) {
       throw new CustomError.NotFoundError(
@@ -178,7 +178,7 @@ const showCurrentStudent = async (req, res) => {
       );
     }
 
-    res.status(StatusCodes.OK).json({...student, badges});
+    res.status(StatusCodes.OK).json({...student, assessmentRecords});
   } catch (error) {
     console.error(error);
     res
