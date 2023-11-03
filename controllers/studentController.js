@@ -168,7 +168,7 @@ const getSingleStudent = async (req, res) => {
 
 const showCurrentStudent = async (req, res) => {
   try {
-    const student = await Student.findOne({ id: req.params._id });
+    const student = await Student.findById(req.params.id);
 
     if (!student) {
       throw new CustomError.NotFoundError(
