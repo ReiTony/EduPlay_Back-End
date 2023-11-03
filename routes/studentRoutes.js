@@ -14,7 +14,7 @@ const {
 } = require("../controllers/recordController");
 const { getStudentModule, getSummary } = require("../controllers/moduleController");
 const { createAssessmentRecord } = require("../controllers/assessmentRecordsController");
-const { getAllAssessments } = require("../controllers/assessmentController");
+const { getAllAssessments, getAssessmentsGradeLevel } = require("../controllers/assessmentController");
 const { createCustomAssessmentRecord } = require("../controllers/customAssessmentRecordController");
 
 // Student
@@ -26,6 +26,9 @@ router.post("/custom-assessment-record", createCustomAssessmentRecord)
 router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
+
+// Assessment
+router.get("/getAssessmentByGrade/:id", getAssessmentsGradeLevel);
 
 // Record
 router.post("/assessment/:assessmentId", recordAssessmentScore);

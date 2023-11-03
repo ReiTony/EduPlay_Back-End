@@ -9,6 +9,11 @@ const NotificationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Assessment",
   },
+  gradeLevel: {
+    type: Number,
+    enum: [1, 2, 3],
+    required: true,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Notification", NotificationSchema);

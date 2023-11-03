@@ -1,4 +1,5 @@
 const Assessment = require("../models/assessmentSchema");
+const Notification = require("../models/notificationSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
@@ -15,6 +16,15 @@ const createAssessment = async (req, res) => {
     });
 
     await newAssessment.save();
+
+    // Create notification
+    const notificationMessage = `A new custom assessment named "${title}" has been uploaded to your learning group`;
+    const notification = new Notification({
+      message: notificationMessage,
+      assessment: newAssessment._id,
+      gradeLevel,
+    });
+    await notification.save();
 
     res.status(StatusCodes.CREATED).json({
       msg: "Success! Assessment Created",
@@ -38,6 +48,28 @@ const getAllAssessments = async (req, res) => {
     throw new CustomError.InternalServerError("Failed to fetch assessments");
   }
 };
+
+const getAssessmentsGradeLevel = async (req, res) => {
+  try {
+    const assessments = await Assessment.find({ gradeLevel: req.params.id });
+
+    if (assessments.length === 0) { // Check if any assessments were found
+      throw new CustomError.NotFoundError(
+        `No assessments with gradeLevel: ${req.params.id}`
+      );
+    }
+
+    res.status(StatusCodes.OK).json({ assessments }); // Return assessments as an array
+  } catch (error) {
+    console.error(error);
+    if (error instanceof CustomError.NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Failed to fetch assessments" });
+    }
+  }
+};
+
 
 const getSingleAssessment = async (req, res) => {
   try {
@@ -112,6 +144,7 @@ const deleteAssessment = async (req, res) => {
 
 module.exports = {
   createAssessment,
+  getAssessmentsGradeLevel,
   getAllAssessments,
   getSingleAssessment,
   updateAssessment,
