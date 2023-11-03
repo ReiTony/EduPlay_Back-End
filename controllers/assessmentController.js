@@ -31,6 +31,7 @@ const getAllAssessments = async (req, res) => {
     let assessments = {};
     if (gradeLevel) assessments = await Assessment.find({gradeLevel});
     else if (id) assessments = await Assessment.findById(id);
+    else assessments = await Assessment.find();
     res.status(StatusCodes.OK).json(assessments);
   } catch (error) {
     console.error(error);
