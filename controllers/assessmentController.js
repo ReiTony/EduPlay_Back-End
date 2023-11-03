@@ -46,6 +46,28 @@ const getAllAssessments = async (req, res) => {
   }
 };
 
+const getAssessmentsGradeLevel = async (req, res) => {
+  try {
+    const assessments = await Assessment.find({ gradeLevel: req.params.id });
+
+    if (assessments.length === 0) { // Check if any assessments were found
+      throw new CustomError.NotFoundError(
+        `No assessments with gradeLevel: ${req.params.id}`
+      );
+    }
+
+    res.status(StatusCodes.OK).json({ assessments }); // Return assessments as an array
+  } catch (error) {
+    console.error(error);
+    if (error instanceof CustomError.NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Failed to fetch assessments" });
+    }
+  }
+};
+
+
 const getSingleAssessment = async (req, res) => {
   try {
     const { assessmentId } = req.params;
@@ -127,6 +149,7 @@ const deleteAssessment = async (req, res) => {
 
 module.exports = {
   createAssessment,
+  getAssessmentsGradeLevel,
   getAllAssessments,
   getSingleAssessment,
   updateAssessment,
