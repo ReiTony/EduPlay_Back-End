@@ -8,6 +8,7 @@ const {
   showCurrentStudent,
 } = require("../controllers/studentController");
 const {
+  recordAssessmentScore,
   recordModuleProgress,
   recordGameScore,
 } = require("../controllers/recordController");
@@ -45,10 +46,11 @@ router.get("/module", getStudentModule);
 router.get("/module-summary", getSummary);
 
 // Record
+router.post("/assessment-score/:assessmentId", recordAssessmentScore);
 router.get("/assessment-record", getAssessmentRecords);
 router.post("/assessment-record", createAssessmentRecord);
 router.post("/custom-assessment-record", createCustomAssessmentRecord);
-router.post("/module/:moduleId", recordModuleProgress);
+router.post("/module-record", recordModuleProgress);
 router.post("/game-score", recordGameScore);
 
 // Notification

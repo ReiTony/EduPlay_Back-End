@@ -125,9 +125,11 @@ const recordModuleProgress = async (req, res) => {
         username,
       });
     }
+    progressReport.modules.push({
+      moduleId: moduleId,
+      moduleProgress: moduleProgress,
 
-    progressReport.moduleId = module._id;
-    progressReport.moduleProgress = moduleProgress;
+    });
 
     await progressReport.save();
 
