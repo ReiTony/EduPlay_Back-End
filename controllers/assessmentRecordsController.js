@@ -75,9 +75,8 @@ const createAssessmentRecord = async (req, res) => {
     const newAssessmentRecord = new AssessmentRecord({ title: module.title, studentId: userId, score: score, moduleNumber, gradeLevel: student.gradeLevel, answers, total: module.questions.length });
     await newAssessmentRecord.save();
     // Create notification
-    const notificationMessage = `You scored ${score}/${module.questions.length} in "${title}"`;
+    const notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}"`;
     const notification = new Notification({
-      gradeLevel: student.gradeLevel,
       message: notificationMessage,
       recipient: userId,
     });
