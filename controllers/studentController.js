@@ -178,24 +178,31 @@ const showCurrentStudent = async (req, res) => {
     }
 
     const gradeLevel = student.gradeLevel;
-    const recepient = student.studentId
-    console.log(`Grade Level: ${gradeLevel}`);
-    
-    const assessmentRecords = await AssessmentRecord.find({ studentId: studentId });
-    const notifications = await Notification
-      .find({ recipient: recepient, gradeLevel: gradeLevel })
+    const recipient = studentId;
+    //console.log(`Grade Level: ${gradeLevel}`);
+    //console.log(`Recipient: ${recipient}`)
+
+    const assessmentRecords = await AssessmentRecord.find({
+      studentId: studentId,
+    });
+    const notifications = await Notification.find({
+      $or: [{ recipient: recipient }, { gradeLevel: gradeLevel }],
+    })
       .sort({ createdAt: -1 })
       .limit(10);
 
     console.log(`Notifications:`, notifications);
 
-    res.status(StatusCodes.OK).json({ ...student, assessmentRecords, notifications });
+    res
+      .status(StatusCodes.OK)
+      .json({ ...student, assessmentRecords, notifications });
   } catch (error) {
     console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
   }
 };
-
 
 const updateStudent = async (req, res) => {
   try {
