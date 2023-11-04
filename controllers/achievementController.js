@@ -9,11 +9,13 @@ const getAchievements = async (req, res, next) => {
     if (!achievements) {
       throw new CustomError.NotFoundError("Achievements not found");
     }
+
     res.status(StatusCodes.OK).json(achievements);
   } catch (error) {
     next(error);
   }
 };
+
 module.exports = {
   getAchievements,
 };
