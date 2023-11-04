@@ -1,5 +1,6 @@
 const Student = require("../models/studentSchema");
 const Notification = require("../models/notificationSchema");
+const Achievement = require("../models/achievementSchema");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
 const { getModuleSync } = require("./moduleController");
 
@@ -9,7 +10,7 @@ const getAssessmentRecords = async (req, res) => {
     let query = {};
     if (moduleNumber) query.moduleNumber = moduleNumber;
     if (gradeLevel) query.gradeLevel = gradeLevel;
-    if (studentId) query.studentId = studentId
+    if (studentId) query.studentId = studentId;
 
     const assessments = await AssessmentRecord.find(query);
     res.status(200).json({ message: "Success", request: assessments });
@@ -47,11 +48,9 @@ const createAssessmentRecord = async (req, res) => {
       "assessment"
     );
     if (module.questions.length !== answers.length)
-      return res
-        .status(400)
-        .json({
-          message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.`,
-        });
+      return res.status(400).json({
+        message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.`,
+      });
 
     let categories = new Array(module.categories.length).fill(0);
     const score = module.questions.reduce((totalScore, question, index) => {
@@ -71,9 +70,18 @@ const createAssessmentRecord = async (req, res) => {
         categories,
         module.categories
       )} to help boost your score!`;
-    
-    const newAssessmentRecord = new AssessmentRecord({ title: module.title, studentId: userId, score: score, moduleNumber, gradeLevel: student.gradeLevel, answers, total: module.questions.length });
+
+    const newAssessmentRecord = new AssessmentRecord({
+      title: module.title,
+      studentId: userId,
+      score: score,
+      moduleNumber,
+      gradeLevel: student.gradeLevel,
+      answers,
+      total: module.questions.length,
+    });
     await newAssessmentRecord.save();
+
     // Create notification
     const notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}"`;
     const notification = new Notification({
@@ -81,7 +89,23 @@ const createAssessmentRecord = async (req, res) => {
       recipient: userId,
     });
     await notification.save();
-    res.status(200).json({ message: "Success", score, recommendation, total: module.questions.length });
+
+    // Add Achievement
+    const achievement = new Achievement({
+      student: userId,
+      moduleOrAssessmentTitle: module.title,
+      completed: true,
+    });
+    await achievement.save();
+
+    res
+      .status(200)
+      .json({
+        message: "Success",
+        score,
+        recommendation,
+        total: module.questions.length,
+      });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
