@@ -16,7 +16,6 @@ const NotificationSchema = new mongoose.Schema({
   gradeLevel: {
     type: Number,
     enum: [1, 2, 3],
-    required: true,
   },
   createdAt: {
     type: Date,
