@@ -25,6 +25,7 @@ const {
 const {
   createCustomAssessmentRecord,
 } = require("../controllers/customAssessmentRecordController");
+const { getNotifications } = require("../controllers/notificationController");
 
 // Student
 router.post("/login", studentLogin);
@@ -44,6 +45,9 @@ router.post("/assessment-record", createAssessmentRecord);
 router.post("/custom-assessment-record", createCustomAssessmentRecord);
 router.post("/module/:moduleId", recordModuleProgress);
 router.post("/game-score", recordGameScore);
+
+// Notification
+router.get("/notifications", getNotifications)
   
 router.get("/:id", showCurrentStudent);
 
