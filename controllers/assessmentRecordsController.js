@@ -3,6 +3,22 @@ const Notification = require("../models/notificationSchema");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
 const { getModuleSync } = require("./moduleController");
 
+const getAssessmentRecords = async (req, res) => {
+  try {
+    const { moduleNumber, studentId, gradeLevel } = req.query;
+    let query = {};
+    if (moduleNumber) query.moduleNumber = moduleNumber;
+    if (gradeLevel) query.gradeLevel = gradeLevel;
+    if (studentId) query.studentId = studentId
+
+    const assessments = await AssessmentRecord.find(query);
+    res.status(200).json({ message: "Success", request: assessments });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const createAssessmentRecord = async (req, res) => {
   try {
     const { moduleNumber, userId, answers } = req.body;
@@ -55,34 +71,18 @@ const createAssessmentRecord = async (req, res) => {
         categories,
         module.categories
       )} to help boost your score!`;
-
-    const newAssessmentRecord = new AssessmentRecord({
-      studentId: userId,
-      score: score,
-      moduleNumber,
-      gradeLevel: student.gradeLevel,
-      answers,
-      total: module.questions.length,
-    });
+    
+    const newAssessmentRecord = new AssessmentRecord({ title: module.title, studentId: userId, score: score, moduleNumber, gradeLevel: student.gradeLevel, answers, total: module.questions.length });
     await newAssessmentRecord.save();
-
     // Create notification
-    const notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}"`;
+    const notificationMessage = `You scored ${score}/${module.questions.length} in "${title}"`;
     const notification = new Notification({
-      message: notificationMessage,
       gradeLevel: student.gradeLevel,
+      message: notificationMessage,
       recipient: userId,
     });
     await notification.save();
-
-    res
-      .status(200)
-      .json({
-        message: "Success",
-        score,
-        recommendation,
-        total: module.questions.length,
-      });
+    res.status(200).json({ message: "Success", score, recommendation, total: module.questions.length });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
@@ -98,4 +98,4 @@ const getMaxWrongAnswers = (arr, categories) => {
   return maxIndices.join(", ");
 };
 
-module.exports = { createAssessmentRecord };
+module.exports = { getAssessmentRecords, createAssessmentRecord };
