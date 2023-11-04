@@ -5,7 +5,7 @@ const CustomError = require("../errors");
 const getAchievements = async (req, res, next) => {
   try {
     const studentId = req.params.userId;
-    const achievements = await Achievement.findById(studentId).lean();
+    const achievements = await Achievement.findOne(studentId).lean();
     if (!achievements) {
       throw new CustomError.NotFoundError("Achievements not found");
     }
