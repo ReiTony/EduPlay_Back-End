@@ -31,6 +31,10 @@ const ProgressReportSchema = new mongoose.Schema({
   ],
   gameScores: [
     {
+      gameScoreId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "GameScore",
+      },
       gameType: {
         type: String,
         required: true,

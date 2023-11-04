@@ -58,6 +58,12 @@ const recordGameScore = async (req, res) => {
   try {
     const { username, gameType, score } = req.body;
 
+    if (!gameType) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "gameType is required in the request body.",
+      });
+    }
+
     let progressReport = await ProgressReport.findOne({ username });
 
     if (!progressReport) {
@@ -73,7 +79,11 @@ const recordGameScore = async (req, res) => {
 
     await newGameScore.save();
 
-    progressReport.gameScores.push(newGameScore._id);
+    progressReport.gameScores.push({
+      gameScoreId: newGameScore._id,
+      gameType: gameType,
+      score: score,
+    });
 
     // Calculate the total game score and update it in the Progress Report
     const totalGameScore = progressReport.gameScores.reduce(
@@ -89,9 +99,11 @@ const recordGameScore = async (req, res) => {
       progressReport,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error:", error);
+
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       error: "Internal Server Error",
+      specificError: error.message,
     });
   }
 };
