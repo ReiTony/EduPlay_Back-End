@@ -4,7 +4,7 @@ const Notification = require("../models/notificationSchema");
 
 const createCustomAssessmentRecord = async (req, res) => {
   try {
-    const { assessment, student, answers, userId } = req.body;
+    const { assessment, student, answers } = req.body;
     if (!assessment || !student || !answers)
       return res
         .status(400)
@@ -12,6 +12,7 @@ const createCustomAssessmentRecord = async (req, res) => {
     const foundAssessment = await Assessment.findById(assessment);
     if (!foundAssessment)
       return res.status(404).json({ message: "Assessment not found" });
+    const assessmentTitle = foundAssessment.title;
     if (foundAssessment.questions.length !== answers.length)
       return res.status(400).json({
         message: `The number of questions (${foundAssessment.questions.length}) and answer (${answers.length}) does not match.`,
@@ -31,10 +32,10 @@ const createCustomAssessmentRecord = async (req, res) => {
     });
     await newCustomAssessmentRecord.save();
     // Create notification
-    const notificationMessage = `You scored ${score}/${foundAssessment.questions.length} in "${assessment.title}"`;
+    const notificationMessage = `You scored ${score}/${foundAssessment.questions.length} in "${foundAssessment.title}"`;
     const notification = new Notification({
       message: notificationMessage,
-      recipient: userId,
+      recipient: student,
     });
     await notification.save();
 
