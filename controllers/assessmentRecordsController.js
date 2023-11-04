@@ -3,13 +3,29 @@ const Notification = require("../models/notificationSchema");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
 const { getModuleSync } = require("./moduleController");
 
+const getAssessmentRecords = async (req, res) => {
+  try {
+    const { moduleNumber, studentId, gradeLevel } = req.query;
+    let query = {};
+    if (moduleNumber) query.moduleNumber = moduleNumber;
+    if (gradeLevel) query.gradeLevel = gradeLevel;
+    if (studentId) query.studentId = studentId
+
+    const assessments = await AssessmentRecord.find(query);
+    res.status(200).json({ message: "Success", request: assessments });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const createAssessmentRecord = async (req, res) => {
   try {
     const { title, moduleNumber, userId, answers } = req.body;
     if (!moduleNumber || !userId || !answers) return res.status(400).json({ message: " title, moduleNumber, userId, and answers, are required." });
     const student = await Student.findById(userId);
     if (!student) return res.status(404).json({ message: "Student not found" });
-    // if ((await AssessmentRecord.find({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber })).length > 0) return res.status(400).json({ message: "You have already taken this assessment!" });
+    if ((await AssessmentRecord.find({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber })).length > 0) return res.status(400).json({ message: "You have already taken this assessment!" });
 
     const module = getModuleSync(moduleNumber, student.gradeLevel, "assessment");
     if (module.questions.length !== answers.length) return res.status(400).json({ message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.` });
@@ -51,4 +67,4 @@ const getMaxWrongAnswers = (arr, categories) => {
   return maxIndices.join(", ");
 };
 
-module.exports = { createAssessmentRecord };
+module.exports = { getAssessmentRecords, createAssessmentRecord };

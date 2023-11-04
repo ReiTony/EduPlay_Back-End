@@ -16,7 +16,7 @@ const {
   getSummary,
 } = require("../controllers/moduleController");
 const {
-  createAssessmentRecord,
+  createAssessmentRecord, getAssessmentRecords,
 } = require("../controllers/assessmentRecordsController");
 const {
   getAllAssessments,
@@ -39,6 +39,7 @@ router.get("/module", getStudentModule);
 router.get("/module-summary", getSummary);
 
 // Record
+router.get("/assessment-record", getAssessmentRecords)
 router.post("/assessment-record", createAssessmentRecord);
 router.post("/custom-assessment-record", createCustomAssessmentRecord);
 router.post("/module/:moduleId", recordModuleProgress);
