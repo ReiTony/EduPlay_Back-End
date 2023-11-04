@@ -5,9 +5,9 @@ const CustomError = require("../errors");
 const getAchievements = async (req, res, next) => {
   try {
     const studentId = req.params.userId;
-    const achievements = await Achievement.find(studentId).lean();
-    if (!achievements) {
-      throw new CustomError.NotFoundError("Achievements not found");
+    const achievements = await Achievement.find({ studentId, completed: true }).lean();
+    if (!achievements || achievements.length === 0) {
+      throw new CustomError.NotFoundError("No completed achievements found");
     }
 
     res.status(StatusCodes.OK).json(achievements);
@@ -15,6 +15,7 @@ const getAchievements = async (req, res, next) => {
     next(error);
   }
 };
+
 
 module.exports = {
   getAchievements,
