@@ -27,7 +27,6 @@ const {
 } = require("../controllers/customAssessmentRecordController");
 
 // Student
-router.get("/:id", showCurrentStudent);
 router.post("/login", studentLogin);
 router.delete("/logout", authenticateUser, studentLogout);
 
@@ -44,5 +43,7 @@ router.post("/assessment-record", createAssessmentRecord);
 router.post("/custom-assessment-record", createCustomAssessmentRecord);
 router.post("/module/:moduleId", recordModuleProgress);
 router.post("/game-score", recordGameScore);
+  
+router.get("/:id", showCurrentStudent);
 
 module.exports = router;
