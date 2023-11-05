@@ -2,6 +2,7 @@ const Assessment = require("../models/assessmentSchema");
 const Module = require("../models/moduleSchema");
 const GameScore = require("../models/gameScoreSchema");
 const ProgressReport = require("../models/progressReportsSchema");
+const Achievement = require("../models/achievementSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
@@ -110,7 +111,7 @@ const recordGameScore = async (req, res) => {
 
 const recordModuleProgress = async (req, res) => {
   try {
-    const { username, moduleId, moduleProgress } = req.body;
+    const { username, moduleId, moduleProgress, title, student } = req.body;
 
     const module = await Module.findById(moduleId);
 
@@ -128,10 +129,14 @@ const recordModuleProgress = async (req, res) => {
     progressReport.modules.push({
       moduleId: moduleId,
       moduleProgress: moduleProgress,
-
     });
 
     await progressReport.save();
+
+    try {
+      const achievement = new Achievement({ student, moduleOrAssessmentTitle: `Module: ${title}`, completed: true });
+      await achievement.save();
+    } catch (error) {}
 
     res.status(StatusCodes.OK).json({
       message: "Module progress recorded",
