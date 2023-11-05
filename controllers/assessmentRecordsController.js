@@ -59,7 +59,7 @@ const createAssessmentRecord = async (req, res) => {
       return totalScore;
     }, 0);
     let recommendation = "";
-    if (Math.max(categories) === 0)
+    if (Math.max(...categories) === 0)
       recommendation = `You scored ${score}/${score} on the '${module.title}' assessment! Keep up the good work!`;
     else
       recommendation = `You scored ${score}/${

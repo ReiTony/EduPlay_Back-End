@@ -35,7 +35,7 @@
     {
       "question": "What do you call things that are not alive?",
       "choices": ["Living Things", "Non-living Things", "Dolls", "Toys"],
-      "correctAnswer": 0,
+      "correctAnswer": 1,
       "category": 1
     },
     {
