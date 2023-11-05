@@ -16,6 +16,8 @@ const achievementSchema = new mongoose.Schema({
   },
 });
 
+achievementSchema.index({ student: 1, moduleOrAssessmentTitle: 1 }, { unique: true });
+
 const Achievement = mongoose.model("Achievement", achievementSchema);
 
 module.exports = Achievement;
