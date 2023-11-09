@@ -111,7 +111,7 @@ const recordGameScore = async (req, res) => {
 
 const recordModuleProgress = async (req, res) => {
   try {
-    const { username, moduleId, moduleProgress, title, student } = req.body;
+    const { username, moduleId, title, student } = req.body;
 
     const module = await Module.findById(moduleId);
 
@@ -126,10 +126,26 @@ const recordModuleProgress = async (req, res) => {
         username,
       });
     }
-    progressReport.modules.push({
-      moduleId: moduleId,
-      moduleProgress: moduleProgress,
-    });
+    
+    // Find the current module index in the progress report
+    const moduleIndex = progressReport.modules.findIndex(
+      (module) => module.moduleId.toString() === moduleId
+    );
+
+    if (moduleIndex === -1) {
+      throw new CustomError.NotFoundError("Module not found in progress report");
+    }
+
+    // Update the is_module_completed field for the current module
+    progressReport.modules[moduleIndex].is_module_completed = true;
+
+    // Get next module based on the order index
+    const nextModule = await Module.findOne({ order: module.order + 1 });
+
+    // Check if the next module exists and is locked
+    if (nextModule && !progressReport.unlockedModules.includes(nextModule._id)) {
+      progressReport.unlockedModules.push(nextModule._id);
+    }
 
     await progressReport.save();
 
