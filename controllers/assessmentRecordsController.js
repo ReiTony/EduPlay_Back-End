@@ -29,24 +29,8 @@ const createAssessmentRecord = async (req, res) => {
         .json({ message: " moduleNumber, userId, and answers, are required." });
     const student = await Student.findById(userId);
     if (!student) return res.status(404).json({ message: "Student not found" });
-    if (
-      (
-        await AssessmentRecord.find({
-          studentId: userId,
-          gradeLevel: student.gradeLevel,
-          moduleNumber,
-        })
-      ).length > 0
-    )
-      return res
-        .status(400)
-        .json({ message: "You have already taken this assessment!" });
 
-    const module = getModuleSync(
-      moduleNumber,
-      student.gradeLevel,
-      "assessment"
-    );
+    const module = getModuleSync(moduleNumber, student.gradeLevel, "assessment");
     if (module.questions.length !== answers.length)
       return res.status(400).json({
         message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.`,
@@ -71,7 +55,7 @@ const createAssessmentRecord = async (req, res) => {
         module.categories
       )} to help boost your score!`;
 
-    const newAssessmentRecord = new AssessmentRecord({
+    const fields = {
       title: module.title,
       studentId: userId,
       score: score,
@@ -79,8 +63,12 @@ const createAssessmentRecord = async (req, res) => {
       gradeLevel: student.gradeLevel,
       answers,
       total: module.questions.length,
-    });
-    await newAssessmentRecord.save();
+    };
+
+    // overwrite assessment if the assessment in db has a lower score
+    const foundAssessment = await AssessmentRecord.find({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber }).lean();
+    if (foundAssessment.length === 0) await new AssessmentRecord(fields).save();
+    else if (foundAssessment[0].score < score) await AssessmentRecord.findOneAndUpdate({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber, score: { $lt: score } }, fields);
 
     // Create notification
     const notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}"`;
