@@ -15,6 +15,7 @@ const {
   adminResetPassword,
   showCurrentAdmin,
 } = require("../controllers/adminController");
+
 const {
   getAllTeachers,
   getSingleTeacher,
@@ -30,7 +31,10 @@ const {
   updateStudent,
   deleteStudent,
 } = require("../controllers/studentController");
-//Admin
+
+const { uploadModules } = require("../controllers/moduleController"); // Import the moduleController
+
+// Admin
 router.get("/", authenticateUser, showCurrentAdmin);
 router.post("/register", adminRegister);
 router.post("/login", adminLogin);
@@ -38,37 +42,54 @@ router.delete("/logout", authenticateUser, adminLogout);
 router.post("/verify-email", adminVerifyEmail);
 router.post("/reset-password", adminResetPassword);
 router.post("/forgot-password", adminForgotPassword);
-//Admin Manages Teacher Account
+
+// Admin Manages Teacher Account
 router.get(
   "/Manage-Teachers",
-  //authenticateUser,
-  //authorizePermissions("admin"),
+  // authenticateUser,
+  // authorizePermissions("admin"),
   getAllTeachers
 );
 router.get(
-  "/showTeacher/:id", //authenticateUser,
+  "/showTeacher/:id",
+  // authenticateUser,
   getSingleTeacher
 );
 router.patch(
-  "/updateTeacher/:id", //authenticateUser,
+  "/updateTeacher/:id",
+  // authenticateUser,
   updateTeacher
 );
 router.patch(
   "/updateTeacherPassword/:id",
-  //authenticateUser,
+  // authenticateUser,
   updateTeacherPassword
 );
 router.delete("/deleteTeacher/:id", authenticateUser, deleteTeacher);
-//Admin Manages Student Account
+
+// Admin Manages Student Account
 router.get(
   "/Manage-Students",
-  //authenticateUser,
-  //authorizePermissions("admin"),
+  // authenticateUser,
+  // authorizePermissions("admin"),
   getAllStudents
 );
 router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
+
+// Admin Uploads Modules
+router.get("/uploadModules", async (req, res) => {
+  const folderPath = "../data/modules/grade1/module1"; 
+  try {
+    await uploadModules(folderPath);
+    res.send("Modules uploaded to the database.");
+  } catch (error) {
+    res
+      .status(error.status || StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(error.message);
+  }
+});
 
 module.exports = router;
