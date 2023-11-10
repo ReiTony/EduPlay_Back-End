@@ -1,59 +1,76 @@
 const mongoose = require("mongoose");
 
-const ProgressReportSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-  },
-  modules: [
-    {
-      moduleId: {
+const ProgressReportSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+    },
+    unlockedModules: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Module",
       },
-      moduleProgress: {
-        type: Number,
-        default: 0,
+    ],
+    modules: [
+      {
+        moduleId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Module",
+        },
+        is_module_completed: {
+          type: Boolean,
+          default: false,
+        },
       },
+    ],
+    assessmentScores: [
+      {
+        assessmentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Assessment",
+        },
+        score: {
+          type: Number,
+          default: 0,
+        },
+        is_assessment_completed: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+    gameScores: [
+      {
+        gameScoreId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "GameScore",
+        },
+        gameType: {
+          type: String,
+          required: true,
+        },
+        score: {
+          type: Number,
+          default: 0,
+        },
+        is_game_completed: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+    totalGameScore: {
+      type: Number,
+      default: 0,
     },
-  ],
-  assessmentScores: [
-    {
-      assessmentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Assessment",
-      },
-      score: {
-        type: Number,
-        default: 0,
-      },
+    averageAssessmentScore: {
+      type: Number,
+      default: 0,
     },
-  ],
-  gameScores: [
-    {
-      gameScoreId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "GameScore",
-      },
-      gameType: {
-        type: String,
-        required: true,
-      },
-      score: {
-        type: Number,
-        default: 0,
-      },
-    },
-  ],
-  totalGameScore: {
-    type: Number,
-    default: 0,
   },
-  averageAssessmentScore: {
-    type: Number,
-    default: 0,
-  },
-},{timestamps: true});
+  { timestamps: true }
+);
 
 const ProgressReport = mongoose.model("ProgressReport", ProgressReportSchema);
 

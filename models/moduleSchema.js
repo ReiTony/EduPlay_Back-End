@@ -6,6 +6,10 @@ const ModuleSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
+    order: {
+      type: Number,
+      required: true,
+    },
     gradeLevel: {
       type: String,
       enum: ["1", "2", "3"],
@@ -20,7 +24,7 @@ const ModuleSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["video", "assessment", "ppt"],
+      enum: ["video", "assessment", "ppt", "game"],
       required: true,
     },
   },
