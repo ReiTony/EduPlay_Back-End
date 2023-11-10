@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const ModuleSchema = new mongoose.Schema(
   {
-    moduleNumber: {
-      type: Number,
-      unique: true,
-    },
     order: {
       type: Number,
       required: true,
@@ -19,12 +15,16 @@ const ModuleSchema = new mongoose.Schema(
       type: Date,
     },
     filePath: {
-      type: String, 
-      required: true, 
+      type: String,
+      required: true,
     },
     type: {
       type: String,
       enum: ["video", "assessment", "ppt", "game"],
+      required: true,
+    },
+    data: {
+      type: Buffer, 
       required: true,
     },
   },
