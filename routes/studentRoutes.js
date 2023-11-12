@@ -29,6 +29,8 @@ const {
 } = require("../controllers/customAssessmentRecordController");
 const { getAchievements } = require("../controllers/achievementController");
 const { getNotifications } = require("../controllers/notificationController");
+const { getProgressReportByStudent } = require("../controllers/progressReportController");
+const { getSingleModule } = require("../controllers/fileController");
 
 // Student
 router.post("/login", studentLogin);
@@ -44,6 +46,7 @@ router.get("/achievement/:id", getAchievements);
 // Module
 router.get("/module", getStudentModule);
 router.get("/module-summary", getSummary);
+router.get("/module/:id", getSingleModule);
 
 // Record
 router.post("/assessment-score/:assessmentId", recordAssessmentScore);
@@ -52,6 +55,9 @@ router.post("/assessment-record", createAssessmentRecord);
 router.post("/custom-assessment-record", createCustomAssessmentRecord);
 router.post("/module-record", recordModule);
 router.post("/game-score", recordGameScore);
+
+//Progress Report
+router.get("/progress-report/:username", getProgressReportByStudent);
 
 // Notification
 router.get("/notifications", getNotifications)
