@@ -31,12 +31,19 @@ const getModules = async (req, res) => {
   try {
     const modules = await Module.find();
 
-    res.status(200).json({ modules });
+    const decodedModules = modules.map(module => {
+      const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+      const jsonData = JSON.parse(decodedData);
+      return { ...module.toObject(), data: jsonData };
+    });
+
+    res.status(200).json({ modules: decodedModules });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve modules" });
   }
 };
+
 
 const getSingleModule = async (req, res) => {
   try {
@@ -48,6 +55,7 @@ const getSingleModule = async (req, res) => {
     }
 
     const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+
     const jsonData = JSON.parse(decodedData);
 
     res.status(200).json({ ...module.toObject(), data: jsonData });
