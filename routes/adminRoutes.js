@@ -32,7 +32,7 @@ const {
   deleteStudent,
 } = require("../controllers/studentController");
 
-const { storeModule, getModules, getSingleModule } = require("../controllers/fileController");
+const { storeModule, getModules, getSingleModule, getModulesByGradeLevel } = require("../controllers/fileController");
 
 // Admin
 router.get("/", authenticateUser, showCurrentAdmin);
@@ -83,5 +83,6 @@ router.delete("/deleteStudent/:id", deleteStudent);
 router.post("/modules", storeModule);
 router.get("/modules", getModules);
 router.get("/module/:id", getSingleModule);
+router.get("/modules/:gradeLevel", getModulesByGradeLevel);
 
 module.exports = router;
