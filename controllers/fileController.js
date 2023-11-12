@@ -1,36 +1,32 @@
+const fs = require("fs");
 const Module = require("../models/moduleSchema");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
-const fs = require('fs').promises;
 
-async function uploadModules(folderPath) {
+const storeModule = async (req, res) => {
   try {
-    const files = await fs.readdir(folderPath);
+    const { order, gradeLevel, date, filePath, type } = req.body;
 
-    for (let index = 0; index < files.length; index++) {
-      const filename = files[index];
-      const filePath = `${folderPath}/${filename}`;
-      const data = await fs.readFile(filePath);
+    const moduleBuffer = fs.readFileSync(filePath);
 
-      const newModule = new Module({
-        order: index + 1,
-        gradeLevel: '1',
-        date: new Date(),
-        filePath,
-        type: getTypeFromFilename(filename),
-        data,
-      });
+    const data = moduleBuffer.toString("base64");
 
-      await newModule.save();
-    }
+    const module = new Module({
+      order,
+      gradeLevel,
+      date,
+      filePath,
+      type,
+      data,
+    });
 
-    console.log('Modules uploaded to the database.');
+    await module.save();
+
+    res.status(201).json({ message: "Module saved successfully" });
   } catch (error) {
-    console.error(error);
-    throw new CustomError('Error uploading modules', StatusCodes.INTERNAL_SERVER_ERROR);
+    console.error(error); 
+    res.status(500).json({ error: "Failed to save module" });
   }
-}
+};
 
 module.exports = {
-  uploadModules,
+  storeModule,
 };
