@@ -9,7 +9,7 @@ const {
 } = require("../controllers/studentController");
 const {
   recordAssessmentScore,
-  recordModuleProgress,
+  recordModule,
   recordGameScore,
 } = require("../controllers/recordController");
 const {
@@ -50,7 +50,7 @@ router.post("/assessment-score/:assessmentId", recordAssessmentScore);
 router.get("/assessment-record", getAssessmentRecords);
 router.post("/assessment-record", createAssessmentRecord);
 router.post("/custom-assessment-record", createCustomAssessmentRecord);
-router.post("/module-record", recordModuleProgress);
+router.post("/module-record", recordModule);
 router.post("/game-score", recordGameScore);
 
 // Notification

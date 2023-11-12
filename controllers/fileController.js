@@ -1,36 +1,94 @@
+const fs = require("fs");
 const Module = require("../models/moduleSchema");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
-const fs = require('fs').promises;
 
-async function uploadModules(folderPath) {
+const storeModule = async (req, res) => {
   try {
-    const files = await fs.readdir(folderPath);
+    const { order, gradeLevel, date, filePath, type } = req.body;
 
-    for (let index = 0; index < files.length; index++) {
-      const filename = files[index];
-      const filePath = `${folderPath}/${filename}`;
-      const data = await fs.readFile(filePath);
+    const moduleBuffer = fs.readFileSync(filePath);
 
-      const newModule = new Module({
-        order: index + 1,
-        gradeLevel: '1',
-        date: new Date(),
-        filePath,
-        type: getTypeFromFilename(filename),
-        data,
-      });
+    const data = moduleBuffer.toString("base64");
 
-      await newModule.save();
-    }
+    const module = new Module({
+      order,
+      gradeLevel,
+      date,
+      filePath,
+      type,
+      data,
+    });
 
-    console.log('Modules uploaded to the database.');
+    await module.save();
+
+    res.status(201).json({ message: "Module saved successfully" });
   } catch (error) {
     console.error(error);
-    throw new CustomError('Error uploading modules', StatusCodes.INTERNAL_SERVER_ERROR);
+    res.status(500).json({ error: "Failed to save module" });
   }
-}
+};
+
+const getModules = async (req, res) => {
+  try {
+    const modules = await Module.find();
+
+    const decodedModules = modules.map(module => {
+      const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+      const jsonData = JSON.parse(decodedData);
+      return { ...module.toObject(), data: jsonData };
+    });
+
+    res.status(200).json({ modules: decodedModules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve modules" });
+  }
+};
+
+
+const getSingleModule = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const module = await Module.findById(id);
+    if (!module) {
+      return res.status(404).json({ error: "Module not found" });
+    }
+
+    const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+
+    const jsonData = JSON.parse(decodedData);
+
+    res.status(200).json({ ...module.toObject(), data: jsonData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve module" });
+  }
+};
+
+const getModulesByGradeLevel = async (req, res) => {
+  try {
+    const { gradeLevel } = req.params;
+
+    const modules = await Module.find({ gradeLevel });
+
+    const decodedModules = modules.map(module => {
+      const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+      const jsonData = JSON.parse(decodedData);
+      return { ...module.toObject(), data: jsonData };
+    });
+
+    res.status(200).json({ modules: decodedModules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve modules" });
+  }
+};
+
+
 
 module.exports = {
-  uploadModules,
+  storeModule,
+  getModules,
+  getSingleModule,
+  getModulesByGradeLevel
 };

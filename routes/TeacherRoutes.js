@@ -52,7 +52,7 @@ router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
 
-// Custom Assesment
+// Custom Assessment
 router.get("/custom-assessment", getCustomAssessmentAnalysis);
 
 // Teacher Manages Assessments
