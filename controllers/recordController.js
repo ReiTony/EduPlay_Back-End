@@ -109,9 +109,9 @@ const recordGameScore = async (req, res) => {
   }
 };
 
-const recordModuleProgress = async (req, res) => {
+const recordModule = async (req, res) => {
   try {
-    const { username, moduleId, title, student } = req.body;
+    const { username, moduleId, title} = req.body;
 
     const module = await Module.findById(moduleId);
 
@@ -126,25 +126,27 @@ const recordModuleProgress = async (req, res) => {
         username,
       });
     }
-    
-    // Find the current module index in the progress report
-    const moduleIndex = progressReport.modules.findIndex(
-      (module) => module.moduleId.toString() === moduleId
+
+    // Check if the module is already in the progress report
+    const existingModuleIndex = progressReport.modules.findIndex(
+      (module) => module.moduleId.toString() === moduleId.toString()
     );
 
-    if (moduleIndex === -1) {
-      throw new CustomError.NotFoundError("Module not found in progress report");
-    }
+    if (existingModuleIndex === -1) {
+      // If the module is not in the progress report, add it
+      progressReport.modules.push({
+        moduleId: moduleId,
+        is_module_completed: true,
+      });
 
-    // Update the is_module_completed field for the current module
-    progressReport.modules[moduleIndex].is_module_completed = true;
-
-    // Get next module based on the order index
-    const nextModule = await Module.findOne({ order: module.order + 1 });
-
-    // Check if the next module exists and is locked
-    if (nextModule && !progressReport.unlockedModules.includes(nextModule._id)) {
-      progressReport.unlockedModules.push(nextModule._id);
+      // You can also check for the next module and unlock it if needed
+      const nextModule = await Module.findOne({ order: module.order + 1 });
+      if (nextModule && !progressReport.unlockedModules.includes(nextModule._id)) {
+        progressReport.unlockedModules.push(nextModule._id);
+      }
+    } else {
+      // If the module is already in the progress report, update its completion status
+      progressReport.modules[existingModuleIndex].is_module_completed = true;
     }
 
     await progressReport.save();
@@ -173,5 +175,5 @@ const recordModuleProgress = async (req, res) => {
 module.exports = {
   recordAssessmentScore,
   recordGameScore,
-  recordModuleProgress,
+  recordModule,
 };
