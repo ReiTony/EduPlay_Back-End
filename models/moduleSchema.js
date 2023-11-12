@@ -7,7 +7,7 @@ const ModuleSchema = new mongoose.Schema(
       required: true,
     },
     gradeLevel: {
-      type: String,
+      type: Number,
       enum: ["1", "2", "3"],
       required: true,
     },
