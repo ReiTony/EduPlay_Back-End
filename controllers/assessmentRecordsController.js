@@ -82,7 +82,7 @@ const createAssessmentRecord = async (req, res) => {
     const badge = getBadge(score);
 
     // Create notification with badge information
-    let notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}".`;
+    let notificationMessage = `You scored ${score}/${assessment.questions.length} in "${assessment.title}".`;
     if (badge) {
       notificationMessage += ` You earned a ${badge} badge!`;
 
@@ -106,12 +106,14 @@ const createAssessmentRecord = async (req, res) => {
     await notification.save();
 
     // Add Achievement
-    const achievement = new Achievement({
-      student: userId,
-      moduleOrAssessmentTitle: assessment.title,
-      completed: true,
-    });
-    await achievement.save();
+    try {
+      const achievement = new Achievement({
+        student: userId,
+        moduleOrAssessmentTitle: assessment.title,
+        completed: true,
+      });
+      await achievement.save();
+    } catch (error) {}
 
     res.status(200).json({
       message: "Success",

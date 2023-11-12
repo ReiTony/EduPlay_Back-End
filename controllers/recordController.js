@@ -111,7 +111,7 @@ const recordGameScore = async (req, res) => {
 
 const recordModule = async (req, res) => {
   try {
-    const { username, moduleId, title} = req.body;
+    const { student, username, moduleId, title} = req.body;
 
     const module = await Module.findById(moduleId);
 
