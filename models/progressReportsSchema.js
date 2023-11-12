@@ -34,10 +34,6 @@ const ProgressReportSchema = new mongoose.Schema(
           type: Number,
           default: 0,
         },
-        is_assessment_completed: {
-          type: Boolean,
-          default: false,
-        },
       },
     ],
     gameScores: [
@@ -53,10 +49,6 @@ const ProgressReportSchema = new mongoose.Schema(
         score: {
           type: Number,
           default: 0,
-        },
-        is_game_completed: {
-          type: Boolean,
-          default: false,
         },
       },
     ],

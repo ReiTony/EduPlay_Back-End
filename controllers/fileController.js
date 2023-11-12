@@ -48,8 +48,9 @@ const getSingleModule = async (req, res) => {
     }
 
     const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+    const jsonData = JSON.parse(decodedData);
 
-    res.status(200).json({ ...module.toObject(), data: decodedData });
+    res.status(200).json({ ...module.toObject(), data: jsonData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve module" });
