@@ -32,7 +32,7 @@ const {
   deleteStudent,
 } = require("../controllers/studentController");
 
-const { uploadModules } = require("../controllers/moduleController"); // Import the moduleController
+const { storeModule } = require("../controllers/fileController");
 
 // Admin
 router.get("/", authenticateUser, showCurrentAdmin);
@@ -79,17 +79,7 @@ router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
 
-// Admin Uploads Modules
-router.get("/uploadModules", async (req, res) => {
-  const folderPath = "../data/modules/grade1/module1"; 
-  try {
-    await uploadModules(folderPath);
-    res.send("Modules uploaded to the database.");
-  } catch (error) {
-    res
-      .status(error.status || StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(error.message);
-  }
-});
+// Admin Manages Modules
+router.post("/modules", storeModule);
 
 module.exports = router;
