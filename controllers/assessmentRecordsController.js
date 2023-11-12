@@ -30,7 +30,11 @@ const createAssessmentRecord = async (req, res) => {
     const student = await Student.findById(userId);
     if (!student) return res.status(404).json({ message: "Student not found" });
 
-    const module = getModuleSync(moduleNumber, student.gradeLevel, "assessment");
+    const module = getModuleSync(
+      moduleNumber,
+      student.gradeLevel,
+      "assessment"
+    );
     if (module.questions.length !== answers.length)
       return res.status(400).json({
         message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.`,
@@ -42,6 +46,7 @@ const createAssessmentRecord = async (req, res) => {
       else categories[question.category]++;
       return totalScore;
     }, 0);
+
     let recommendation = "";
     if (Math.max(...categories) === 0)
       recommendation = `You scored ${score}/${score} on the '${module.title}' assessment! Keep up the good work!`;
@@ -50,7 +55,7 @@ const createAssessmentRecord = async (req, res) => {
         module.questions.length
       } on the '${
         module.title
-      }' Consider studying more about ${getMaxWrongAnswers(
+      }'. Consider studying more about ${getMaxWrongAnswers(
         categories,
         module.categories
       )} to help boost your score!`;
@@ -66,12 +71,44 @@ const createAssessmentRecord = async (req, res) => {
     };
 
     // overwrite assessment if the assessment in db has a lower score
-    const foundAssessment = await AssessmentRecord.find({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber }).lean();
+    const foundAssessment = await AssessmentRecord.find({
+      studentId: userId,
+      gradeLevel: student.gradeLevel,
+      moduleNumber,
+    }).lean();
     if (foundAssessment.length === 0) await new AssessmentRecord(fields).save();
-    else if (foundAssessment[0].score < score) await AssessmentRecord.findOneAndUpdate({ studentId: userId, gradeLevel: student.gradeLevel, moduleNumber, score: { $lt: score } }, fields);
+    else if (foundAssessment[0].score < score)
+      await AssessmentRecord.findOneAndUpdate(
+        {
+          studentId: userId,
+          gradeLevel: student.gradeLevel,
+          moduleNumber,
+          score: { $lt: score },
+        },
+        fields
+      );
 
-    // Create notification
-    const notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}"`;
+    // Determine the badge based on the score
+    const badge = getBadge(score);
+
+    // Create notification with badge information
+    let notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}".`;
+    if (badge) {
+      notificationMessage += ` You earned a ${badge} badge!`;
+
+      if (badge === "gold") {
+        notificationMessage += " Congratulations!";
+      } else if (badge === "silver") {
+        notificationMessage += " Well done!. Keep it up!";
+      } else if (badge === "bronze") {
+        notificationMessage +=
+          " Good effort! Review a bit more and try to take the test again.";
+      }
+    } else {
+      notificationMessage +=
+        " Review a bit more and try to take the test again.";
+    }
+
     const notification = new Notification({
       message: notificationMessage,
       recipient: userId,
@@ -86,19 +123,42 @@ const createAssessmentRecord = async (req, res) => {
     });
     await achievement.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Success",
-        score,
-        recommendation,
-        total: module.questions.length,
-      });
+    res.status(200).json({
+      message: "Success",
+      score,
+      recommendation,
+      total: module.questions.length,
+      badge,
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 };
+
+function getBadge(score) {
+  if (score === 10) {
+    return "gold";
+  } else if (score > 4 && score < 10) {
+    return "silver";
+  } else if (score === 4) {
+    return "bronze";
+  } else {
+    return null; 
+  }
+}
+
+function getBadge(score) {
+  if (score === 10) {
+    return "gold";
+  } else if (score > 4 && score < 10) {
+    return "silver";
+  } else if (score === 4) {
+    return "bronze";
+  } else {
+    return null; // No badge for other scores
+  }
+}
 
 const getMaxWrongAnswers = (arr, categories) => {
   let max = Math.max(...arr);
