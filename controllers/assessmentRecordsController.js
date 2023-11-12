@@ -22,7 +22,7 @@ const getAssessmentRecords = async (req, res) => {
 
 const createAssessmentRecord = async (req, res) => {
   try {
-    const { moduleNumber, userId, answers } = req.body;
+    const { moduleNumber, userId, answers, assessment } = req.body;
     if (!moduleNumber || !userId || !answers)
       return res
         .status(400)
@@ -30,18 +30,8 @@ const createAssessmentRecord = async (req, res) => {
     const student = await Student.findById(userId);
     if (!student) return res.status(404).json({ message: "Student not found" });
 
-    const module = getModuleSync(
-      moduleNumber,
-      student.gradeLevel,
-      "assessment"
-    );
-    if (module.questions.length !== answers.length)
-      return res.status(400).json({
-        message: `The number of questions (${module.questions.length}) and answer (${answers.length}) does not match.`,
-      });
-
-    let categories = new Array(module.categories.length).fill(0);
-    const score = module.questions.reduce((totalScore, question, index) => {
+    let categories = new Array(assessment.categories.length).fill(0);
+    const score = assessment.questions.reduce((totalScore, question, index) => {
       if (question.correctAnswer === answers[index]) return totalScore + 1;
       else categories[question.category]++;
       return totalScore;
@@ -49,25 +39,25 @@ const createAssessmentRecord = async (req, res) => {
 
     let recommendation = "";
     if (Math.max(...categories) === 0)
-      recommendation = `You scored ${score}/${score} on the '${module.title}' assessment! Keep up the good work!`;
+      recommendation = `You scored ${score}/${score} on the '${assessment.title}' assessment! Keep up the good work!`;
     else
       recommendation = `You scored ${score}/${
-        module.questions.length
+        assessment.questions.length
       } on the '${
-        module.title
+        assessment.title
       }'. Consider studying more about ${getMaxWrongAnswers(
         categories,
-        module.categories
+        assessment.categories
       )} to help boost your score!`;
 
     const fields = {
-      title: module.title,
+      title: assessment.title,
       studentId: userId,
       score: score,
       moduleNumber,
       gradeLevel: student.gradeLevel,
       answers,
-      total: module.questions.length,
+      total: assessment.questions.length,
     };
 
     // overwrite assessment if the assessment in db has a lower score
@@ -92,7 +82,7 @@ const createAssessmentRecord = async (req, res) => {
     const badge = getBadge(score);
 
     // Create notification with badge information
-    let notificationMessage = `You scored ${score}/${module.questions.length} in "${module.title}".`;
+    let notificationMessage = `You scored ${score}/${assessment.questions.length} in "${assessment.title}".`;
     if (badge) {
       notificationMessage += ` You earned a ${badge} badge!`;
 
@@ -116,18 +106,20 @@ const createAssessmentRecord = async (req, res) => {
     await notification.save();
 
     // Add Achievement
-    const achievement = new Achievement({
-      student: userId,
-      moduleOrAssessmentTitle: module.title,
-      completed: true,
-    });
-    await achievement.save();
+    try {
+      const achievement = new Achievement({
+        student: userId,
+        moduleOrAssessmentTitle: assessment.title,
+        completed: true,
+      });
+      await achievement.save();
+    } catch (error) {}
 
     res.status(200).json({
       message: "Success",
       score,
       recommendation,
-      total: module.questions.length,
+      total: assessment.questions.length,
       badge,
     });
   } catch (error) {
