@@ -65,8 +65,30 @@ const getSingleModule = async (req, res) => {
   }
 };
 
+const getModulesByGradeLevel = async (req, res) => {
+  try {
+    const { gradeLevel } = req.params;
+
+    const modules = await Module.find({ gradeLevel });
+
+    const decodedModules = modules.map(module => {
+      const decodedData = Buffer.from(module.data.toString(), 'base64').toString('utf-8');
+      const jsonData = JSON.parse(decodedData);
+      return { ...module.toObject(), data: jsonData };
+    });
+
+    res.status(200).json({ modules: decodedModules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve modules" });
+  }
+};
+
+
+
 module.exports = {
   storeModule,
   getModules,
   getSingleModule,
+  getModulesByGradeLevel
 };
