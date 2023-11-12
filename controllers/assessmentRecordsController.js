@@ -148,18 +148,6 @@ function getBadge(score) {
   }
 }
 
-function getBadge(score) {
-  if (score === 10) {
-    return "gold";
-  } else if (score > 4 && score < 10) {
-    return "silver";
-  } else if (score === 4) {
-    return "bronze";
-  } else {
-    return null; // No badge for other scores
-  }
-}
-
 const getMaxWrongAnswers = (arr, categories) => {
   let max = Math.max(...arr);
   let maxIndices = [];
