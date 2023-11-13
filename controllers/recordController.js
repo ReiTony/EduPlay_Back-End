@@ -9,7 +9,7 @@ const CustomError = require("../errors");
 const recordAssessmentScore = async (req, res) => {
   try {
     const { assessmentId } = req.params;
-    const { username, score } = req.body;
+    const { username, score, moduleNumber } = req.body;
 
     const assessment = await Assessment.findById(assessmentId);
 
@@ -28,11 +28,13 @@ const recordAssessmentScore = async (req, res) => {
       });
     }
 
-    // Add the assessment score to the Progress Report
-    progressReport.assessmentScores.push({
-      assessment: assessment._id,
-      score,
-    });
+    if (moduleNumber > progressReport.assessmentScores.length) {
+      progressReport.assessmentScores.push({ assessment: assessment._id, score });
+    } else if (progressReport.assessmentScores[moduleNumber - 1].score < score) {
+      progressReport.assessmentScores[moduleNumber - 1].score = score;
+    } else {
+      return res.status(200).json({ message: "Assessment score not recorded", progressReport });
+    }
 
     // Calculate the average score and update it in the Progress Report
     const totalScores = progressReport.assessmentScores.reduce(
