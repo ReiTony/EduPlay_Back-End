@@ -13,20 +13,19 @@ const createTransporter = async () => {
   return transporter;
 };
 
-const sendResetPassword = async ({ name, email, token, origin }) => {
-  const user = getUserByEmail(email);
+const sendResetPassword = async ({ teacher, token, origin }) => {
+  console.log('Teacher Object:', teacher); 
+  const transporter = await createTransporter();
 
-  const transporter = await createTransporter(user.email, user.password);
-
-  const resetURL = `${origin}/user/reset-password?token=${token}&email=${email}`;
+  const resetURL = `${origin}/user/reset-password?token=${token}&email=${teacher.email}`;
   const message = `<p>Please reset your password by clicking on the following link : 
     <a href="${resetURL}">Reset Password</a></p>`;
 
   return transporter.sendMail({
     from: '"EduPlay" <eduplay@gmail.com>', 
-    to: email,
+    to: teacher.email,
     subject: "Reset Password",
-    html: `<h4>Hello, ${name}</h4>
+    html: `<h4>Hello, ${teacher.name}</h4>
       ${message}
     `,
   });
