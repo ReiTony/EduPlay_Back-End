@@ -178,19 +178,23 @@ const teacherLogout = async (req, res, next) => {
 };
 
 const teacherForgotPassword = async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    throw new CustomError.BadRequestError("Please provide valid email");
-  }
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new CustomError.BadRequestError("Please provide a valid email");
+    }
 
-  const teacher = await Teacher.findOne({ email });
+    const teacher = await Teacher.findOne({ email });
 
-  if (teacher) {
+    if (!teacher) {
+      throw new CustomError.NotFoundError("Teacher not found");
+    }
+
     const passwordToken = crypto.randomBytes(70).toString("hex");
     const origin = "http://localhost:5173";
+
     await sendResetPassword({
-      name: teacher.name,
-      email: teacher.email,
+      teacher, // Pass the teacher object
       token: passwordToken,
       origin,
     });
@@ -201,35 +205,83 @@ const teacherForgotPassword = async (req, res) => {
     teacher.passwordToken = createHash(passwordToken);
     teacher.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await teacher.save();
-  }
 
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: "Please check your email for reset password link" });
-};
-const teacherResetPassword = async (req, res) => {
-  const { token, email, password } = req.body;
-  if (!token || !email || !password) {
-    throw new CustomError.BadRequestError("Please provide all values");
-  }
-  const teacher = await Teacher.findOne({ email });
+    res
+      .status(StatusCodes.OK)
+      .json({ msg: "Please check your email for the reset password link" });
+  } catch (error) {
+    console.error("Error in teacherForgotPassword:", error);
 
-  if (teacher) {
-    const currentDate = new Date();
-
-    if (
-      teacher.passwordToken === createHash(token) &&
-      teacher.passwordTokenExpirationDate > currentDate
-    ) {
-      teacher.password = password;
-      teacher.passwordToken = null;
-      teacher.passwordTokenExpirationDate = null;
-      await teacher.save();
+    if (error instanceof CustomError) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: "Internal Server Error",
+      });
     }
   }
-
-  res.send("reset password");
 };
+
+
+const teacherResetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      throw new CustomError.BadRequestError("Please provide the email");
+    }
+
+    const teacher = await Teacher.findOne({ email });
+
+    if (!teacher) {
+      throw new CustomError.NotFoundError("Teacher not found");
+    }
+
+    const newPassword = req.body.newPassword; 
+    if (!newPassword) {
+      throw new CustomError.BadRequestError("Please provide the new password");
+    }
+    teacher.password = newPassword;
+    await teacher.save();
+
+    res.send("Password Reset Successfully");
+
+  } catch (error) {
+    console.error("Error in teacherResetPassword:", error);
+
+    if (error instanceof CustomError) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: "Internal Server Error",
+      });
+    }
+  }
+};
+
+// const teacherResetPassword = async (req, res) => {
+//   const { email } = req.body;
+//   if (!email ) {
+//     throw new CustomError.BadRequestError("Please provide all values");
+//   }
+//   const teacher = await Teacher.findOne({ email });
+
+//   if (teacher) {
+//     const currentDate = new Date();
+
+//     if (
+//       teacher.passwordToken === createHash(token) &&
+//       teacher.passwordTokenExpirationDate > currentDate
+//     ) {
+//       teacher.password = password;
+//       teacher.passwordToken = null;
+//       teacher.passwordTokenExpirationDate = null;
+//       await teacher.save();
+//     }
+//   }
+
+//   res.send("Password Reset Successfully");
+// };
 module.exports = {
   teacherRegister,
   teacherLogin,
