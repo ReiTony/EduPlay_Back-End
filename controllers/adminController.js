@@ -29,7 +29,7 @@ const adminRegister = async (req, res) => {
     username,
     verificationToken,
   });
-  const origin = "http://localhost:5173";
+  const origin = "https://eduplay-lhjs.onrender.com/";
 
   await sendVerification({
     name: admin.name,
@@ -158,7 +158,7 @@ const adminForgotPassword = async (req, res) => {
 
   if (admin) {
     const passwordToken = crypto.randomBytes(70).toString("hex");
-    const origin = "http://localhost:3000";
+    const origin = "https://eduplay-lhjs.onrender.com/";
     await sendResetPassword({
       name: admin.name,
       email: admin.email,
