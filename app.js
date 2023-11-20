@@ -10,7 +10,7 @@ const cors = require('cors');
 
 // Configure CORS
 const corsOptions = {
-  origin: "https://eduplay-lhjs.onrender.com/", 
+  origin: "https://eduplay-lhjs.onrender.com", 
   credentials: true, 
 };
 

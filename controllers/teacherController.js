@@ -34,7 +34,7 @@ const teacherRegister = async (req, res) => {
       lrn,
       verificationToken,
     });
-    const origin = "https://eduplay-lhjs.onrender.com/";
+    const origin = "https://eduplay-lhjs.onrender.com";
 
     await sendVerification({
       name: teacher.name,
@@ -191,7 +191,7 @@ const teacherForgotPassword = async (req, res) => {
     }
 
     const passwordToken = crypto.randomBytes(70).toString("hex");
-    const origin = "https://eduplay-lhjs.onrender.com/";
+    const origin = "https://eduplay-lhjs.onrender.com";
 
     await sendResetPassword({
       teacher, // Pass the teacher object
