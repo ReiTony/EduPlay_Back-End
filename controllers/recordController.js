@@ -29,7 +29,8 @@ const recordAssessmentScore = async (req, res) => {
     }
 
     if (moduleNumber > progressReport.assessmentScores.length) {
-      progressReport.assessmentScores.push({ assessment: assessment._id, score });
+      // progressReport.assessmentScores.push({ assessment: assessment._id, score });
+      progressReport.assessmentScores.push({ score });
     } else if (progressReport.assessmentScores[moduleNumber - 1].score < score) {
       progressReport.assessmentScores[moduleNumber - 1].score = score;
     } else {
