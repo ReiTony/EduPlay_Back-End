@@ -222,6 +222,7 @@ const updateStudent = async (req, res) => {
       );
     }
 
+    // student info
     student.lastName = lastName;
     student.firstName = firstName;
     student.gradeLevel = gradeLevel;
@@ -231,6 +232,20 @@ const updateStudent = async (req, res) => {
     student.username = username;
 
     await student.save();
+
+    const progressReport = await ProgressReport.findOne({
+      username: req.params.id,
+    });
+
+    if (!progressReport) {
+      throw new CustomError.NotFoundError(
+        `No progress report found for username: ${req.params.id}`
+      );
+    }
+
+    progressReport.username = username;
+
+    await progressReport.save();
 
     const tokenStudent = createTokenUser(student);
     attachCookiesToResponse({ res, student: tokenStudent });
