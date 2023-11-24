@@ -65,5 +65,10 @@ The backend server should now be running and accessible at http://localhost:5000
 ## Database
 EduPlay uses MongoDB as the database. You can configure the database connection in the .env file.
 
+## Contributors
+<a href="https://github.com/ReiTony/EduPlay_Back-End/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ReiTony/EduPlay_Back-End" />
+</a>
+
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.

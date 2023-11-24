@@ -8,16 +8,16 @@ const CustomError = require("../errors");
 
 const recordAssessmentScore = async (req, res) => {
   try {
-    const { assessmentId } = req.params;
+    // const { assessmentId } = req.params;
     const { username, score, moduleNumber } = req.body;
 
-    const assessment = await Assessment.findById(assessmentId);
+    // const assessment = await Assessment.findById(assessmentId);
 
-    if (!assessment) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Assessment not found" });
-    }
+    // if (!assessment) {
+    //   return res
+    //     .status(StatusCodes.NOT_FOUND)
+    //     .json({ message: "Assessment not found" });
+    // }
 
     // Find or create the associated Progress Report based on student username
     let progressReport = await ProgressReport.findOne({ username });
@@ -29,7 +29,8 @@ const recordAssessmentScore = async (req, res) => {
     }
 
     if (moduleNumber > progressReport.assessmentScores.length) {
-      progressReport.assessmentScores.push({ assessment: assessment._id, score });
+      // progressReport.assessmentScores.push({ assessment: assessment._id, score });
+      progressReport.assessmentScores.push({ score });
     } else if (progressReport.assessmentScores[moduleNumber - 1].score < score) {
       progressReport.assessmentScores[moduleNumber - 1].score = score;
     } else {
