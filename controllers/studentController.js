@@ -266,18 +266,44 @@ const updateStudent = async (req, res) => {
 };
 
 const deleteStudent = async (req, res) => {
-  const username = req.params.id;
-  if (!username) {
-    throw new CustomError.BadRequestError("Please provide a valid username");
-  }
-  const student = await Student.findOneAndDelete({ username });
-  if (!student) {
-    throw new CustomError.NotFoundError(
-      `Student with username "${username}" not found`
-    );
-  }
+  try {
+    const username = req.params.id;
 
-  res.status(StatusCodes.OK).json({ message: "Student deleted successfully" });
+    if (!username) {
+      throw new CustomError.BadRequestError("Please provide a valid username");
+    }
+
+    const student = await Student.findOneAndDelete({ username });
+
+    if (!student) {
+      throw new CustomError.NotFoundError(
+        `Student with username "${username}" not found`
+      );
+    }
+
+    const progressReport = await ProgressReport.findOneAndDelete({
+      username: username,
+    });
+
+    if (!progressReport) {
+      console.log(`Progress report not found for username: ${username}`);
+    } else {
+      console.log(`Deleted progress report for username: ${username}`);
+    }
+
+    res.status(StatusCodes.OK).json({ message: "Student deleted successfully" });
+  } catch (error) {
+    if (error instanceof CustomError.BadRequestError) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    } else if (error instanceof CustomError.NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
+    } else {
+      console.error("An error occurred:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal server error" });
+    }
+  }
 };
 
 module.exports = {
