@@ -19,11 +19,12 @@ EduPlay aims to provide a user-friendly and interactive platform for young stude
 
 ## Features
 
-- **User Management**: Manage students, teachers, and parents' accounts.
+- **User Management**: Manage students, which is handled by the Teacher side.
 - **Assessment Management**: Create, update, and delete quizzes for grade 1 to 3.
-- **Interactive Games**: Integrate educational games to make learning fun.
-- **Security**: Implement secure user authentication and authorization.
-- **Scalability**: Built to scale as your user base grows.
+- **Achievement Tracker**: Records the student achievements based on the module finished.
+- **Notification Handling**: Creates a notification whenever a student finishes a module/game/quiz/custom quiz and returns their score on the notification modal on the front end
+- **Progress Report Tracker**: Track and record student's scores from games, quizzes and custom quizzes even their progress on the modules and the achievements they gathered.
+- **Security**: Implement secure user authentication and authorization with jwt token.
 
 ## Prerequisites
 
@@ -53,10 +54,12 @@ Start the server: npm start
 The backend server should now be running and accessible at http://localhost:5000 by default.
 
 ## API Endpoints
+* Main Routes:
+   * /api/v1/Student: Student endpoints.
+   * /api/v1/Teacher: Teacher endpoints.
 * User Management
-    * /api/v1/Admin: Admin registration and authentication endpoints.
-    * /api/v1/Student: Student registration and authentication endpoints.
-    * /api/v1/Teacher: Teacher registration and authentication endpoints.
+    * /api/v1/Student: Student endpoints.
+    * /api/v1/Teacher: Teacher endpoints.
 * Assessment Management
 * Score Tracking
 * Games Integration
