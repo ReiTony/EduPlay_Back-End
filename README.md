@@ -15,16 +15,16 @@ EduPlay is an interactive school management system specifically designed for gra
 
 ## Introduction
 
-EduPlay aims to provide a user-friendly and interactive platform for young students, teachers, and parents to facilitate effective learning and school management. The backend component is built using Express.js, a Node.js web application framework, to handle the server-side logic and API endpoints.
+EduPlay aims to provide a user-friendly and interactive platform for young students, teachers, and parents to facilitate effective learning and school management. The backend component is built using ![Express.js](https://img.shields.io/badge/Express.js-4.x-green) , a Node.js web application framework, to handle the server-side logic and API endpoints.
 
 ## Features
 
-- **User Management**: Manage students, which is handled by the Teacher side.
-- **Assessment Management**: Create, update, and delete quizzes for grade 1 to 3.
-- **Achievement Tracker**: Records the student achievements based on the module finished.
-- **Notification Handling**: Creates a notification whenever a student finishes a module/game/quiz/custom quiz and returns their score on the notification modal on the front end
-- **Progress Report Tracker**: Track and record student's scores from games, quizzes and custom quizzes even their progress on the modules and the achievements they gathered.
-- **Security**: Implement secure user authentication and authorization with jwt token.
+- **User Management**: Teachers can manage student profiles.
+- **Assessment**: Create, update, and delete quizzes for grades 1 to 3.
+- **Achievement Tracker**: Record student achievements based on completed modules.
+- **Notifications**: Notify students when they complete a module/game/quiz, displaying scores on the front end.
+- **Progress Tracking**: Monitor student scores, progress on modules, and gathered achievements.
+- **Security**: Ensure secure user authentication and authorization using JWT tokens.
 
 ## Prerequisites
 
@@ -58,8 +58,10 @@ The backend server should now be running and accessible at http://localhost:5000
    * /api/v1/Student: Student endpoints.
    * /api/v1/Teacher: Teacher endpoints.
 * User Management
-    * /api/v1/Student: Student endpoints.
-    * /api/v1/Teacher: Teacher endpoints.
+    * /api/v1/Teacher/reset-password - Teacher can reset password thru email.
+    * /api/v1/Teacher/addStudent - Teacher creates student.
+    * /api/v1/Teacher/updateStudent/:id - Teacher update students account information.
+    * /api/v1/Teacher/deleteStudent/:id - Teacher deletes student.
 * Assessment Management
 * Score Tracking
 * Games Integration
