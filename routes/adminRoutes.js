@@ -32,8 +32,6 @@ const {
   deleteStudent,
 } = require("../controllers/studentController");
 
-const { storeModule, getModules, getSingleModule, getModulesByGradeLevel } = require("../controllers/fileController");
-
 // Admin
 router.get("/", authenticateUser, showCurrentAdmin);
 router.post("/register", adminRegister);
@@ -78,11 +76,5 @@ router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
-
-// Admin Manages Modules
-router.post("/modules", storeModule);
-router.get("/modules", getModules);
-router.get("/module/:id", getSingleModule);
-router.get("/modules/:gradeLevel", getModulesByGradeLevel);
 
 module.exports = router;
