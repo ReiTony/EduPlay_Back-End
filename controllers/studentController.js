@@ -11,7 +11,7 @@ const Notification = require("../models/notificationSchema");
 const studentRegister = async (req, res) => {
   try {
     const { lastName, firstName, birthMonth, birthDay, gradeLevel } = req.body;
-    const username = `${lastName}${firstName}`;
+    const username = `${lastName}${firstName}`.replace(/\s/g, "");
     const password = `${birthMonth}${birthDay}`;
     const verificationToken = crypto.randomBytes(40).toString("hex");
 
@@ -54,7 +54,9 @@ const studentLogin = async (req, res) => {
       );
     }
 
-    const student = await Student.findOne({ username });
+    const student = await Student.findOne({
+      username: { $regex: new RegExp(username, "i") },
+    });
 
     if (!student) {
       throw new CustomError.UnauthenticatedError("Invalid Credentials");
