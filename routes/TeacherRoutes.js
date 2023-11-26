@@ -18,10 +18,8 @@ const {
   teacherLogin,
   teacherLogout,
   teacherVerifyEmail,
-  teacherForgotPassword,
   teacherResetPassword,
 } = require("../controllers/teacherController");
-const { getClass } = require("../controllers/classController");
 const {
   createAssessment,
   updateAssessment,
