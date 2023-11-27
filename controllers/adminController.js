@@ -5,79 +5,60 @@ const CustomError = require("../errors");
 const {
   attachCookiesToResponse,
   createTokenUser,
-  sendVerification,
-  sendResetPassword,
   createHash,
 } = require("../utils");
 const crypto = require("crypto");
 
 const adminRegister = async (req, res) => {
-  const { email, name, password, username } = req.body;
+  try {
+    const { email, name, password } = req.body;
 
-  //try {
-  const emailAlreadyExists = await Admin.findOne({ email });
-  if (emailAlreadyExists) {
-    throw new CustomError.BadRequestError("Email already exists");
+    const emailAlreadyExists = await Admin.findOne({ email });
+    if (emailAlreadyExists) {
+      throw new CustomError.BadRequestError("Email already exists");
+    }
+
+    const newAdmin = new Admin({
+      name,
+      email,
+      password,
+    });
+
+    await newAdmin.save();
+
+    res.status(StatusCodes.CREATED).json({
+      msg: "Success! Admin registered",
+    });
+  } catch (error) {
+    console.error("An error occurred:", error);
+    if (error instanceof CustomError.BadRequestError) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: "An internal server error occurred",
+      });
+    }
   }
-
-  const verificationToken = crypto.randomBytes(40).toString("hex");
-
-  const admin = await Admin.create({
-    name,
-    email,
-    password,
-    username,
-    verificationToken,
-  });
-  const origin = "https://eduplay-lhjs.onrender.com";
-
-  await sendVerification({
-    name: admin.name,
-    email: admin.email,
-    verificationToken: admin.verificationToken,
-    origin,
-  });
-
-  res.status(StatusCodes.CREATED).json({
-    msg: "Success! Please check your email to verify account",
-  });
-  // } catch (error) {
-  // Handle different types of errors here
-  //   console.error("An error occurred:", error);
-
-  // You can customize the response based on the error type
-  //   if (error instanceof CustomError.BadRequestError) {
-  //     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
-  //   } else if (error instanceof SomeOtherErrorType) {
-  // Handle other specific error types if needed
-  //  } else {
-  // Handle generic errors
-  //    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-  //     error: "An internal server error occurred",
-  //   });
-  //   }
-  //  }
 };
+// const adminVerifyEmail = async (req, res) => {
+//   const { verificationToken, email } = req.body;
+//   const admin = await Admin.findOne({ email });
 
-const adminVerifyEmail = async (req, res) => {
-  const { verificationToken, email } = req.body;
-  const admin = await Admin.findOne({ email });
+//   if (!admin) {
+//     throw new CustomError.UnauthenticatedError("Verification Failed");
+//   }
 
-  if (!admin) {
-    throw new CustomError.UnauthenticatedError("Verification Failed");
-  }
+//   if (admin.verificationToken !== verificationToken) {
+//     throw new CustomError.UnauthenticatedError("Verification Failed");
+//   }
 
-  if (admin.verificationToken !== verificationToken) {
-    throw new CustomError.UnauthenticatedError("Verification Failed");
-  }
+//   (admin.isVerified = true), (admin.verified = Date.now());
+//   admin.verificationToken = "";
 
-  (admin.isVerified = true), (admin.verified = Date.now());
-  admin.verificationToken = "";
+//   await admin.save();
 
-  await admin.save();
-
-  res.status(StatusCodes.OK).json({ msg: "Email Verified" });
-};
+//   res.status(StatusCodes.OK).json({ msg: "Email Verified" });
+// };
 
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -87,7 +68,7 @@ const adminLogin = async (req, res) => {
       "Please provide username and password"
     );
   }
-  const userAgent = req.headers["admin-agent"];
+
   const admin = await Admin.findOne({ email });
 
   if (!admin) {
@@ -98,10 +79,8 @@ const adminLogin = async (req, res) => {
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError("Invalid Credentials");
   }
-  if (!admin.isVerified) {
-    throw new CustomError.UnauthenticatedError("Please verify your email");
-  }
-  const tokenAdmin = createTokenUser(admin, userAgent);
+
+  const tokenAdmin = createTokenUser(admin);
 
   let refreshToken = "";
 
@@ -117,8 +96,8 @@ const adminLogin = async (req, res) => {
     res.status(StatusCodes.OK).json({ user: tokenAdmin });
     return;
   }
-
   refreshToken = crypto.randomBytes(40).toString("hex");
+  const userAgent = req.headers["user-agent"];
   const ip = req.ip;
   const adminToken = {
     refreshToken,
@@ -134,75 +113,73 @@ const adminLogin = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ user: tokenAdmin });
 };
-const adminLogout = async (req, res) => {
-  await Token.findOneAndDelete({ user: req.admin._id });
 
-  res.cookie("accessToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.cookie("refreshToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.status(StatusCodes.OK).json({ msg: "admin logged out!" });
+const adminLogout = async (req, res, next) => {
+  try {
+    if (!req.admin) {
+      throw new CustomError.UnauthenticatedError("Admin not authenticated");
+    }
+
+    const tokenToDelete = req.admin._id;
+    const deletedToken = await Token.findOneAndDelete({ user: tokenToDelete });
+
+    if (!deletedToken) {
+      console.log("Token not found");
+    } else {
+      console.log("Deleted token:", deletedToken);
+      console.log("Token deleted successfully");
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    console.log("Cookies cleared successfully");
+
+    res.status(StatusCodes.OK).json({ msg: "Admin logged out!" });
+  } catch (error) {
+    console.error("Error during admin logout:", error);
+    next(error);
+  }
 };
 
-const adminForgotPassword = async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    throw new CustomError.BadRequestError("Please provide valid email");
-  }
-
-  const admin = await Admin.findOne({ email });
-
-  if (admin) {
-    const passwordToken = crypto.randomBytes(70).toString("hex");
-    const origin = "https://eduplay-lhjs.onrender.com";
-    await sendResetPassword({
-      name: admin.name,
-      email: admin.email,
-      token: passwordToken,
-      origin,
-    });
-
-    const tenMinutes = 1000 * 60 * 10;
-    const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
-
-    admin.passwordToken = createHash(passwordToken);
-    admin.passwordTokenExpirationDate = passwordTokenExpirationDate;
-    await admin.save();
-  }
-
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: "Please check your email for reset password link" });
-};
 const adminResetPassword = async (req, res) => {
-  const { token, email, password } = req.body;
-  if (!token || !email || !password) {
-    throw new CustomError.BadRequestError("Please provide all values");
-  }
-  const admin = await Admin.findOne({ email });
+  try {
+    const { email } = req.body;
 
-  if (admin) {
-    const currentDate = new Date();
+    if (!email) {
+      throw new CustomError.BadRequestError("Please provide the email");
+    }
 
-    if (
-      admin.passwordToken === createHash(token) &&
-      admin.passwordTokenExpirationDate > currentDate
-    ) {
-      admin.password = password;
-      admin.passwordToken = null;
-      admin.passwordTokenExpirationDate = null;
-      await admin.save();
+    const admin = await Admin.findOne({ email });
+
+    if (!admin) {
+      throw new CustomError.NotFoundError("Admin not found");
+    }
+
+    const password = req.body.password;
+    if (!password) {
+      throw new CustomError.BadRequestError("Please provide the new password");
+    }
+
+    admin.password = password;
+    await admin.save();
+
+    res.send("Password Reset Successfully");
+  } catch (error) {
+    console.error("Error in adminResetPassword:", error);
+
+    if (error instanceof CustomError) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: "Internal Server Error",
+      });
     }
   }
-
-  res.send("reset password");
 };
 
-const showCurrentAdmin = async (req, res) => {
+
+const currentAdmin = async (req, res) => {
   res.status(StatusCodes.OK).json({ admin: req.admin });
 };
 
@@ -210,8 +187,6 @@ module.exports = {
   adminRegister,
   adminLogin,
   adminLogout,
-  adminVerifyEmail,
-  adminForgotPassword,
   adminResetPassword,
-  showCurrentAdmin,
+  currentAdmin,
 };

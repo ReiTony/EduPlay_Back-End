@@ -1,80 +1,33 @@
 const express = require("express");
 const router = express.Router();
-
 const {
-  authenticateUser,
-  authorizePermissions,
-} = require("../middleware/authentication");
-
-const {
-  adminRegister,
   adminLogin,
   adminLogout,
-  adminVerifyEmail,
-  adminForgotPassword,
+  adminRegister,
   adminResetPassword,
-  showCurrentAdmin,
+  currentAdmin,
 } = require("../controllers/adminController");
 
 const {
-  getAllTeachers,
-  getSingleTeacher,
-  updateTeacher,
-  updateTeacherPassword,
-  deleteTeacher,
-} = require("../controllers/manageTeach");
-
-const {
-  studentRegister,
+  deleteStudent,
+  updateStudent,
   getAllStudents,
   getSingleStudent,
-  updateStudent,
-  deleteStudent,
+  studentRegister,
 } = require("../controllers/studentController");
 
 // Admin
-router.get("/", authenticateUser, showCurrentAdmin);
+router.get("/", currentAdmin);
 router.post("/register", adminRegister);
 router.post("/login", adminLogin);
-router.delete("/logout", authenticateUser, adminLogout);
-router.post("/verify-email", adminVerifyEmail);
+router.delete("/logout", adminLogout);
 router.post("/reset-password", adminResetPassword);
-router.post("/forgot-password", adminForgotPassword);
 
-// Admin Manages Teacher Account
-router.get(
-  "/Manage-Teachers",
-  // authenticateUser,
-  // authorizePermissions("admin"),
-  getAllTeachers
-);
-router.get(
-  "/showTeacher/:id",
-  // authenticateUser,
-  getSingleTeacher
-);
-router.patch(
-  "/updateTeacher/:id",
-  // authenticateUser,
-  updateTeacher
-);
-router.patch(
-  "/updateTeacherPassword/:id",
-  // authenticateUser,
-  updateTeacherPassword
-);
-router.delete("/deleteTeacher/:id", authenticateUser, deleteTeacher);
-
-// Admin Manages Student Account
-router.get(
-  "/Manage-Students",
-  // authenticateUser,
-  // authorizePermissions("admin"),
-  getAllStudents
-);
+// Admin Manages Students
+router.get("/students", getAllStudents);
 router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
-router.patch("/updateStudent/:id", updateStudent);
+router.patch("/updateStudent/:id", updateStudent);  
 router.delete("/deleteStudent/:id", deleteStudent);
 
 module.exports = router;
