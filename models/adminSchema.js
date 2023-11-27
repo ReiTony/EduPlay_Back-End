@@ -39,15 +39,6 @@ const AdminSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/diverse/image/upload/v1674562453/diverse/oipm1ecb1yudf9eln7az.jpg",
     },
-    verificationToken: String,
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    verified: Date,
-    passwordToken: {
-      type: String,
-    },
     passwordTokenExpirationDate: {
       type: Date,
     },
