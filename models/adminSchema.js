@@ -14,12 +14,6 @@ const AdminSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 50,
     },
-    username: {
-      type: String,
-      required: [true, "Please provide username"],
-      minlength: 3,
-      maxlength: 10,
-    },
     email: {
       type: String,
       unique: true,
