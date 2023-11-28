@@ -16,6 +16,12 @@ const {
   studentRegister,
 } = require("../controllers/studentController");
 
+const {
+  storeModule,
+  getModules,
+  getSingleModule,
+  getModulesByGradeLevel,
+} = require("../controllers/fileController");
 // Admin
 router.get("/", currentAdmin);
 router.post("/register", adminRegister);
@@ -27,7 +33,13 @@ router.post("/reset-password", adminResetPassword);
 router.get("/students", getAllStudents);
 router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
-router.patch("/updateStudent/:id", updateStudent);  
+router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
+
+// Admin Manages Modules
+router.post("/modules", storeModule);
+router.get("/modules", getModules);
+router.get("/module/:id", getSingleModule);
+router.get("/modules/:gradeLevel", getModulesByGradeLevel);
 
 module.exports = router;
