@@ -312,21 +312,26 @@ const getSingleTeacher = async (req, res) => {
 
 const updateTeacher = async (req, res) => {
   try {
-    const { email, username, name } = req.body;
-    if (!email || !username) {
+    const { email, name } = req.body;
+    if (!email || !name) {
       throw new CustomError.BadRequestError("Please provide all values");
     }
-    const teacher = await Teacher.findOne({ _id: req.teacher.teacherId });
+    const teacher = await Teacher.findOne({ _id: req.params.id });
+
+    if (!teacher) {
+      throw new CustomError.NotFoundError(
+        `Teacher doesn't exists: ${req.params.id}`
+      );
+    }
 
     teacher.email = email;
-    teacher.username = username;
     teacher.name = name;
 
     await teacher.save();
 
     const tokenTeacher = createTokenUser(teacher);
     attachCookiesToResponse({ res, user: tokenTeacher });
-    res.status(StatusCodes.OK).json({ teacher: tokenTeacher });
+    res.status(StatusCodes.OK).json({ user: tokenTeacher });
   } catch (error) {
     if (error instanceof CustomError.BadRequestError) {
       res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
@@ -373,28 +378,17 @@ const updateTeacherPassword = async (req, res) => {
 
 const deleteTeacher = async (req, res) => {
   try {
-    const teacherId = req.params.teacherId;
-
-    if (!teacherId) {
-      throw new CustomError.BadRequestError(
-        "Please provide a valid teacher ID"
-      );
-    }
-    const teacher = await Teacher.findOne({ _id: teacherId });
+    const teacher = await Teacher.findOneAndDelete({ _id: req.params.id });
 
     if (!teacher) {
       throw new CustomError.NotFoundError("Teacher not found");
     }
 
-    await teacher.remove();
-
     res
       .status(StatusCodes.OK)
       .json({ message: "Teacher deleted successfully" });
   } catch (error) {
-    if (error instanceof CustomError.BadRequestError) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
-    } else if (error instanceof CustomError.NotFoundError) {
+    if (error instanceof CustomError.NotFoundError) {
       res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
     } else {
       console.error("An error occurred:", error);
@@ -404,6 +398,7 @@ const deleteTeacher = async (req, res) => {
     }
   }
 };
+
 
 module.exports = {
   teacherRegister,
