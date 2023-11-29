@@ -19,7 +19,7 @@ EduPlay aims to provide a user-friendly and interactive platform for young stude
 
 ## Features
 
-- **User Management**: Teachers can manage student profiles.
+- **User Management**: Teachers can manage student profiles. Admin can manage both Teacher and student
 - **Assessment**: Create, update, and delete quizzes for grades 1 to 3.
 - **Achievement Tracker**: Record student achievements based on completed modules.
 - **Notifications**: Notify students when they complete a module/game/quiz, displaying scores on the front end.
@@ -57,12 +57,21 @@ The backend server should now be running and accessible at http://localhost:5000
 * Main Routes:
    * /api/v1/Student: Student endpoints.
    * /api/v1/Teacher: Teacher endpoints.
+   * /api/v1/Admin: Admin endpoints
 * User Management
-    * /api/v1/Teacher/reset-password - Teacher can reset password thru email.
-    * /api/v1/Teacher/addStudent - Teacher creates student.
-    * /api/v1/Teacher/updateStudent/:id - Teacher update students account information.
-    * /api/v1/Teacher/deleteStudent/:id - Teacher deletes student.
+    * Teacher/addStudent - Teacher creates student.
+    * Teacher/updateStudent/:id - Teacher update student's account information.
+    * Teacher/deleteStudent/:id - Teacher deletes student.
+    * Admin/addTeacher - Admin creates Teacher
+    * Admin/updateTeacher/:id - Admin update Teacher's information
+    * Admin/updateTeacherPassword/:id - Admin update Teacher's password
+    * Admin/deleteTeacher/:id - Admin deletes Teacher
 * Assessment Management
+    *  Teacher/assessments - Get all assessments
+    *  Teacher/getAssessment/:assessmentId - Get single assessment
+    *  Teacher/createAssessment - Create an assessment
+    *  Teacher/updateAssessment/:assessmentId - Update an assessment
+    *  Teacher/deleteAssessment/:assessmentId - Delete an assessment
 * Score Tracking
 * Games Integration
   
