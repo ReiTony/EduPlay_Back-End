@@ -351,7 +351,7 @@ const updateTeacherPassword = async (req, res) => {
     if (!oldPassword || !newPassword) {
       throw new CustomError.BadRequestError("Please provide both values");
     }
-    const teacher = await Teacher.findOne({ _id: req.teacher.teacherId });
+    const teacher = await Teacher.findOne({ _id: req.params.id });
 
     const isPasswordCorrect = await teacher.comparePassword(oldPassword);
     if (!isPasswordCorrect) {
