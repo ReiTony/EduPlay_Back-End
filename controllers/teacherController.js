@@ -15,7 +15,7 @@ const currentTeacher = async (req, res) => {
 
 const teacherRegister = async (req, res) => {
   try {
-    const { email, name, password, gradeLevel, lrn } = req.body;
+    const { email, name, password, gradeLevel} = req.body;
 
     const emailAlreadyExists = await Teacher.findOne({ email });
     if (emailAlreadyExists) {
@@ -29,7 +29,6 @@ const teacherRegister = async (req, res) => {
       email,
       password,
       gradeLevel,
-      lrn,
       verificationToken,
     });
     const origin = "https://eduplay-lhjs.onrender.com";

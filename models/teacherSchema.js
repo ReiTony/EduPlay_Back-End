@@ -4,12 +4,6 @@ const bcrypt = require("bcryptjs");
 
 const TeacherSchema = new mongoose.Schema(
   {
-    lrn: {
-      type: Number,
-      unique: true,
-      minlength: 12,
-      required: true,
-    },
     role: {
       type: String,
       default: "Teacher",
