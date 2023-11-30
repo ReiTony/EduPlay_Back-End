@@ -6,6 +6,7 @@ const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerification,
+  sendResetPassword
 } = require("../utils");
 const crypto = require("crypto");
 
@@ -174,50 +175,50 @@ const teacherLogout = async (req, res, next) => {
   }
 };
 
-// const teacherForgotPassword = async (req, res) => {
-//   try {
-//     const { email } = req.body;
-//     if (!email) {
-//       throw new CustomError.BadRequestError("Please provide a valid email");
-//     }
+const teacherForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new CustomError.BadRequestError("Please provide a valid email");
+    }
 
-//     const teacher = await Teacher.findOne({ email });
+    const teacher = await Teacher.findOne({ email });
 
-//     if (!teacher) {
-//       throw new CustomError.NotFoundError("Teacher not found");
-//     }
+    if (!teacher) {
+      throw new CustomError.NotFoundError("Teacher not found");
+    }
 
-//     const passwordToken = crypto.randomBytes(70).toString("hex");
-//     const origin = "https://eduplay-lhjs.onrender.com";
+    const passwordToken = crypto.randomBytes(70).toString("hex");
+    const origin = "https://eduplay-lhjs.onrender.com";
 
-//     await sendResetPassword({
-//       teacher, // Pass the teacher object
-//       token: passwordToken,
-//       origin,
-//     });
+    await sendResetPassword({
+      teacher,
+      token: passwordToken,
+      origin,
+    });
 
-//     const tenMinutes = 1000 * 60 * 10;
-//     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
+    const tenMinutes = 1000 * 60 * 10;
+    const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 
-//     teacher.passwordToken = createHash(passwordToken);
-//     teacher.passwordTokenExpirationDate = passwordTokenExpirationDate;
-//     await teacher.save();
+    teacher.passwordToken = createHash(passwordToken);
+    teacher.passwordTokenExpirationDate = passwordTokenExpirationDate;
+    await teacher.save();
 
-//     res
-//       .status(StatusCodes.OK)
-//       .json({ msg: "Please check your email for the reset password link" });
-//   } catch (error) {
-//     console.error("Error in teacherForgotPassword:", error);
+    res
+      .status(StatusCodes.OK)
+      .json({ msg: "Please check your email for the reset password link" });
+  } catch (error) {
+    console.error("Error in teacherForgotPassword:", error);
 
-//     if (error instanceof CustomError) {
-//       res.status(error.statusCode).json({ error: error.message });
-//     } else {
-//       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-//         error: "Internal Server Error",
-//       });
-//     }
-//   }
-// };
+    if (error instanceof CustomError) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: "Internal Server Error",
+      });
+    }
+  }
+};
 
 const teacherResetPassword = async (req, res) => {
   try {
@@ -404,6 +405,7 @@ module.exports = {
   teacherLogin,
   teacherLogout,
   teacherVerifyEmail,
+  teacherForgotPassword,
   teacherResetPassword,
   currentTeacher,
   getAllTeachers,
