@@ -19,7 +19,7 @@ EduPlay aims to provide a user-friendly and interactive platform for young stude
 
 ## Features
 
-- **User Management**: Teachers can manage student profiles.
+- **User Management**: Teachers can manage student profiles. Admin can manage both Teacher and student
 - **Assessment**: Create, update, and delete quizzes for grades 1 to 3.
 - **Achievement Tracker**: Record student achievements based on completed modules.
 - **Notifications**: Notify students when they complete a module/game/quiz, displaying scores on the front end.
@@ -57,14 +57,23 @@ The backend server should now be running and accessible at http://localhost:5000
 * Main Routes:
    * /api/v1/Student: Student endpoints.
    * /api/v1/Teacher: Teacher endpoints.
+   * /api/v1/Admin: Admin endpoints
 * User Management
-    * /api/v1/Teacher/reset-password - Teacher can reset password thru email.
-    * /api/v1/Teacher/addStudent - Teacher creates student.
-    * /api/v1/Teacher/updateStudent/:id - Teacher update students account information.
-    * /api/v1/Teacher/deleteStudent/:id - Teacher deletes student.
+    * Teacher/addStudent - Teacher creates student.
+    * Teacher/updateStudent/:id - Teacher update student's account information.
+    * Teacher/deleteStudent/:id - Teacher deletes student.
+    * Admin/addTeacher - Admin creates Teacher
+    * Admin/updateTeacher/:id - Admin update Teacher's information
+    * Admin/updateTeacherPassword/:id - Admin update Teacher's password
+    * Admin/deleteTeacher/:id - Admin deletes Teacher
 * Assessment Management
-* Score Tracking
-* Games Integration
+    * Teacher/assessments - Get all assessments
+    * Teacher/getAssessment/:assessmentId - Get single assessment
+    * Teacher/createAssessment - Create an assessment
+    * Teacher/updateAssessment/:assessmentId - Update an assessment
+    * Teacher/deleteAssessment/:assessmentId - Delete an assessment
+* Progress Tracking
+
   
 
 ## Database
@@ -76,4 +85,12 @@ EduPlay uses MongoDB as the database. You can configure the database connection 
 </a>
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+The MIT License (MIT)
+
+Copyright (c) 2015 Chris Kibble
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
