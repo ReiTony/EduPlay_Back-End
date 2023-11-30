@@ -14,21 +14,29 @@ const createTransporter = async () => {
 };
 
 const sendResetPassword = async ({ teacher, token, origin }) => {
-  console.log('Teacher Object:', teacher); 
-  const transporter = await createTransporter();
+  try {
+    if (!teacher || !teacher.email) {
+      throw new Error("Email not provided for password reset.");
+    }
 
-  const resetURL = `${origin}/user/reset-password?token=${token}&email=${teacher.email}`;
-  const message = `<p>Please reset your password by clicking on the following link : 
-    <a href="${resetURL}">Reset Password</a></p>`;
+    const transporter = await createTransporter();
 
-  return transporter.sendMail({
-    from: '"EduPlay" <eduplay@gmail.com>', 
-    to: teacher.email,
-    subject: "Reset Password",
-    html: `<h4>Hello, ${teacher.name}</h4>
-      ${message}
-    `,
-  });
+    const resetURL = `${origin}/user/reset-password?token=${token}&email=${teacher.email}`;
+    const message = `<p>Please reset your password by clicking on the following link : 
+      <a href="${resetURL}">Reset Password</a></p>`;
+
+    return transporter.sendMail({
+      from: '"EduPlay" <eduplay1909@gmail.com>',
+      to: teacher.email,
+      subject: "Reset Password",
+      html: `<h4>Hello, ${teacher.name}</h4>
+        ${message}
+      `,
+    });
+  } catch (error) {
+    console.error(error.message);
+    throw error; 
+  }
 };
 
 module.exports = sendResetPassword;

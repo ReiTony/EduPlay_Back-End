@@ -6,7 +6,8 @@ const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerification,
-  sendResetPassword
+  sendResetPassword,
+  createHash,
 } = require("../utils");
 const crypto = require("crypto");
 
