@@ -19,6 +19,7 @@ const {
   teacherLogout,
   teacherVerifyEmail,
   teacherResetPassword,
+  teacherForgotPassword
 } = require("../controllers/teacherController");
 const {
   createAssessment,
@@ -41,6 +42,7 @@ router.post("/login", teacherLogin);
 router.delete("/logout", authenticateUser, teacherLogout);
 router.post("/verify-email", teacherVerifyEmail);
 router.post("/reset-password", teacherResetPassword);
+router.post("/forgot-password", teacherForgotPassword);
 
 // Teacher Manages Student Account with same GradeLevel
 router.get("/Class", getAllStudents);
