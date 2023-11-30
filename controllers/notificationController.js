@@ -18,12 +18,20 @@ const getAllNotifications = async (req, res) => {
 const getNotifications = async (req, res) => {
   try {
     const { recipient, gradeLevel } = req.query;
-    if (recipient && gradeLevel) {
-      const temp1 = await Notification.find({ recipient });
-      const temp2 = await Notification.find({ gradeLevel });
-      return res.status(200).json({ message: "Success", request: [...temp1, ...temp2] });
+    let query = {};
+
+    if (recipient) {
+      query.recipient = recipient;
     }
-    const notifications = await Notification.find({});
+
+    if (gradeLevel) {
+      query.gradeLevel = gradeLevel;
+    }
+
+    const notifications = await Notification.find(query)
+      .sort({ createdAt: -1 }) 
+      .limit(5); 
+
     res.status(200).json({ message: "Success", request: notifications });
   } catch (error) {
     console.log(error.message);
