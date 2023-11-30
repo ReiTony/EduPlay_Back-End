@@ -30,6 +30,7 @@ const createCustomAssessmentRecord = async (req, res) => {
     // Create notification
     const notificationMessage = `You scored ${score}/${foundAssessment.questions.length} in "${foundAssessment.title}"`;
     const notification = new Notification({
+      assessment: foundAssessment,
       message: notificationMessage,
       recipient: student,
     });

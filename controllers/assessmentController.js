@@ -131,7 +131,12 @@ const deleteAssessment = async (req, res) => {
       throw new CustomError.NotFoundError(`No assessment with ID: ${assessmentId}`);
     }
 
-    res.status(StatusCodes.OK).json({ message: "Assessment deleted successfully" });
+    const notification = await Notification.findOneAndDelete({ assessment: assessmentId });
+    if (!notification) {
+      console.log(`Assessment not found: ${assessmentId}`);
+    } 
+
+    res.status(StatusCodes.OK).json({ message: "Assessment and Notification deleted successfully" });
   } catch (error) {
     console.error(error);
     if (error instanceof CustomError.NotFoundError) {
