@@ -7,7 +7,7 @@ const {
   createTokenUser,
   sendVerification,
   sendResetPassword,
-  createHash,
+  hashString,
 } = require("../utils");
 const crypto = require("crypto");
 
@@ -17,7 +17,7 @@ const currentTeacher = async (req, res) => {
 
 const teacherRegister = async (req, res) => {
   try {
-    const { email, name, password, gradeLevel} = req.body;
+    const { email, name, password, gradeLevel } = req.body;
 
     const emailAlreadyExists = await Teacher.findOne({ email });
     if (emailAlreadyExists) {
@@ -190,18 +190,17 @@ const teacherForgotPassword = async (req, res) => {
     }
 
     const passwordToken = crypto.randomBytes(70).toString("hex");
+    const hashedPasswordToken = await hashString(passwordToken);
     const origin = "https://eduplay-lhjs.onrender.com";
-
     await sendResetPassword({
       teacher,
       token: passwordToken,
       origin,
     });
-
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
-
-    teacher.passwordToken = createHash(passwordToken);
+    teacher.passwordToken = hashedPasswordToken;
+    console.log("Token:", teacher.passwordToken);
     teacher.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await teacher.save();
 
@@ -221,13 +220,53 @@ const teacherForgotPassword = async (req, res) => {
   }
 };
 
+// const teacherResetPassword = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+
+//     if (!email) {
+//       throw new CustomError.BadRequestError("Please provide the email");
+//     }
+
+//     const teacher = await Teacher.findOne({ email });
+
+//     if (!teacher) {
+//       throw new CustomError.NotFoundError("Teacher not found");
+//     }
+
+//     const newPassword = req.body.newPassword;
+//     if (!newPassword) {
+//       throw new CustomError.BadRequestError("Please provide the new password");
+//     }
+//     teacher.password = newPassword;
+//     await teacher.save();
+
+//     res.send("Password Reset Successfully");
+//   } catch (error) {
+//     console.error("Error in teacherResetPassword:", error);
+
+//     if (error instanceof CustomError) {
+//       res.status(error.statusCode).json({ error: error.message });
+//     } else {
+//       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//         error: "Internal Server Error",
+//       });
+//     }
+//   }
+// };
+
+const bcrypt = require("bcrypt");
+
 const teacherResetPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, token } = req.query;
 
-    if (!email) {
-      throw new CustomError.BadRequestError("Please provide the email");
+    if (!email || !token) {
+      throw new CustomError.BadRequestError(
+        "Please provide both email and token"
+      );
     }
+    const cleanedToken = token.trim();
 
     const teacher = await Teacher.findOne({ email });
 
@@ -235,14 +274,22 @@ const teacherResetPassword = async (req, res) => {
       throw new CustomError.NotFoundError("Teacher not found");
     }
 
-    const newPassword = req.body.newPassword;
-    if (!newPassword) {
-      throw new CustomError.BadRequestError("Please provide the new password");
+    const isTokenValid = await bcrypt.compare(
+      cleanedToken,
+      teacher.passwordToken
+    );
+
+    if (!isTokenValid || teacher.passwordTokenExpirationDate < new Date()) {
+      throw new CustomError.BadRequestError("Invalid or expired token");
     }
+
+    const newPassword = req.body.newPassword;
     teacher.password = newPassword;
+    teacher.passwordToken = null;
+    teacher.passwordTokenExpirationDate = null;
     await teacher.save();
 
-    res.send("Password Reset Successfully");
+    res.status(StatusCodes.OK).json({ message: "Password Reset Successfully" });
   } catch (error) {
     console.error("Error in teacherResetPassword:", error);
 
@@ -255,30 +302,6 @@ const teacherResetPassword = async (req, res) => {
     }
   }
 };
-
-// const teacherResetPassword = async (req, res) => {
-//   const { email } = req.body;
-//   if (!email ) {
-//     throw new CustomError.BadRequestError("Please provide all values");
-//   }
-//   const teacher = await Teacher.findOne({ email });
-
-//   if (teacher) {
-//     const currentDate = new Date();
-
-//     if (
-//       teacher.passwordToken === createHash(token) &&
-//       teacher.passwordTokenExpirationDate > currentDate
-//     ) {
-//       teacher.password = password;
-//       teacher.passwordToken = null;
-//       teacher.passwordTokenExpirationDate = null;
-//       await teacher.save();
-//     }
-//   }
-
-//   res.send("Password Reset Successfully");
-// };
 
 // Manage Teacher For Admin
 
@@ -399,7 +422,6 @@ const deleteTeacher = async (req, res) => {
     }
   }
 };
-
 
 module.exports = {
   teacherRegister,

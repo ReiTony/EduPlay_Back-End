@@ -1,6 +1,8 @@
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
-const hashString = (string) =>
-  crypto.createHash('md5').update(string).digest('hex');
+const hashString = async (string) => {
+  const saltRounds = 10;
+  return bcrypt.hash(string, saltRounds);
+};
 
 module.exports = hashString;

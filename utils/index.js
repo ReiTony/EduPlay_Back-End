@@ -3,7 +3,7 @@ const createTokenUser = require('./createTokenUser');
 const checkPermissions = require('./checkPerms');
 const sendVerification = require('./sendVerification');
 const sendResetPassword = require('./sendResetPassword');
-const createHash = require('./createHash');
+const hashString = require('./createHash');
 
 module.exports = {
   createJWT,
@@ -13,5 +13,5 @@ module.exports = {
   checkPermissions,
   sendVerification,
   sendResetPassword,
-  createHash,
+  hashString,
 };
