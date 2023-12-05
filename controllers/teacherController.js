@@ -2,13 +2,7 @@ const Teacher = require("../models/teacherSchema");
 const Token = require("../models/tokenSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const {
-  attachCookiesToResponse,
-  createTokenUser,
-  sendVerification,
-  sendResetPassword,
-  hashString,
-} = require("../utils");
+const { attachCookiesToResponse, createTokenUser, sendVerification, sendResetPassword, hashString } = require("../utils");
 const crypto = require("crypto");
 
 const currentTeacher = async (req, res) => {
@@ -47,9 +41,7 @@ const teacherRegister = async (req, res) => {
     });
   } catch (error) {
     console.error(error); // Log the error to the console
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
   }
 };
 
@@ -75,9 +67,7 @@ const teacherVerifyEmail = async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: "Email Verified" });
   } catch (error) {
     console.error(error); // Log the error to the console
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
   }
 };
 
@@ -86,9 +76,7 @@ const teacherLogin = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new CustomError.BadRequestError(
-        "Please provide email and password"
-      );
+      throw new CustomError.BadRequestError("Please provide email and password");
     }
 
     const teacher = await Teacher.findOne({ email });
@@ -140,9 +128,7 @@ const teacherLogin = async (req, res) => {
     res.status(StatusCodes.OK).json({ user: tokenTeacher });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
   }
 };
 
@@ -192,11 +178,11 @@ const teacherForgotPassword = async (req, res) => {
     const passwordToken = crypto.randomBytes(70).toString("hex");
     const hashedPasswordToken = await hashString(passwordToken);
     const origin = "https://eduplay-lhjs.onrender.com";
-    await sendResetPassword({
-      teacher,
-      token: passwordToken,
-      origin,
-    });
+    // await sendResetPassword({
+    //   teacher,
+    //   token: passwordToken,
+    //   origin,
+    // });
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
     teacher.passwordToken = hashedPasswordToken;
@@ -204,9 +190,7 @@ const teacherForgotPassword = async (req, res) => {
     teacher.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await teacher.save();
 
-    res
-      .status(StatusCodes.OK)
-      .json({ msg: "Please check your email for the reset password link" });
+    res.status(StatusCodes.OK).json({ msg: "Please check your email for the reset password link" });
   } catch (error) {
     console.error("Error in teacherForgotPassword:", error);
 
@@ -260,11 +244,11 @@ const bcrypt = require("bcrypt");
 const teacherResetPassword = async (req, res) => {
   try {
     const { email, token } = req.query;
-
+    console.log("email", email);
+    console.log("token", token);
+    console.log("newPass", req.body.newPassword);
     if (!email || !token) {
-      throw new CustomError.BadRequestError(
-        "Please provide both email and token"
-      );
+      throw new CustomError.BadRequestError("Please provide both email and token");
     }
     const cleanedToken = token.trim();
 
@@ -274,10 +258,8 @@ const teacherResetPassword = async (req, res) => {
       throw new CustomError.NotFoundError("Teacher not found");
     }
 
-    const isTokenValid = await bcrypt.compare(
-      cleanedToken,
-      teacher.passwordToken
-    );
+    console.log(cleanedToken, teacher.passwordToken);
+    const isTokenValid = await bcrypt.compare(cleanedToken, teacher.passwordToken);
 
     if (!isTokenValid || teacher.passwordTokenExpirationDate < new Date()) {
       throw new CustomError.BadRequestError("Invalid or expired token");
@@ -321,9 +303,7 @@ const getSingleTeacher = async (req, res) => {
   try {
     const teacher = await Teacher.findOne({ email: req.params.id });
     if (!teacher) {
-      throw new CustomError.NotFoundError(
-        `No teacher with id : ${req.params.id}`
-      );
+      throw new CustomError.NotFoundError(`No teacher with id : ${req.params.id}`);
     }
     res.status(StatusCodes.OK).json({ teacher });
   } catch (error) {
@@ -343,9 +323,7 @@ const updateTeacher = async (req, res) => {
     const teacher = await Teacher.findOne({ _id: req.params.id });
 
     if (!teacher) {
-      throw new CustomError.NotFoundError(
-        `Teacher doesn't exists: ${req.params.id}`
-      );
+      throw new CustomError.NotFoundError(`Teacher doesn't exists: ${req.params.id}`);
     }
 
     teacher.email = email;
@@ -408,9 +386,7 @@ const deleteTeacher = async (req, res) => {
       throw new CustomError.NotFoundError("Teacher not found");
     }
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Teacher deleted successfully" });
+    res.status(StatusCodes.OK).json({ message: "Teacher deleted successfully" });
   } catch (error) {
     if (error instanceof CustomError.NotFoundError) {
       res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
