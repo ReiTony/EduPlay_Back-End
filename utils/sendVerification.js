@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const Mailgen = require("mailgen");
+const path = require("path");
 require("dotenv").config();
 
 const createTransporter = async () => {
@@ -18,11 +19,14 @@ const sendVerification = async ({ name, email, verificationToken, origin }) => {
   const transporter = await createTransporter();
 
   const mailGenerator = new Mailgen({
-    theme: "salted",
+    theme: {
+      path: path.resolve(__dirname, "../utils/eduplay-Theme.html"),
+    },
     product: {
       name: "EduPlay",
       link: "https://eduplay-lhjs.onrender.com/",
-      logo: "https://your-logo-url.com/logo.png",
+      logo: "https://drive.google.com/uc?id=1AvTHkFmbzNKkuAGo4K2Lx-jtecs9LiMI",
+      logoHeight: "200px",
     },
   });
 
@@ -30,21 +34,16 @@ const sendVerification = async ({ name, email, verificationToken, origin }) => {
 
   const emailContent = {
     body: {
-      name: "EduPlay",
+      name,
       title: "Email Confirmation",
       intro: "Please confirm your email by clicking on the following link:",
-      action: {
-        instructions:
-          "Verifying your email gives you access to EduPlay. Click the button below:",
-        button: {
-          color: "#22BC66",
-          text: "CONFIRM EMAIL",
-          link: verifyEmail,
-        },
+      button: {
+        color: "#22BC66",
+        text: "CONFIRM EMAIL",
+        link: verifyEmail,
       },
     },
   };
-
   const emailTemplate = mailGenerator.generate(emailContent);
 
   return transporter.sendMail({
