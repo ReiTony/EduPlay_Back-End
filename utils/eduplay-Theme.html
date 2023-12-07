@@ -21,25 +21,26 @@
     color: black;
   "
 >
-  Welcome to EduPlay!
+  <%= title %>
 </div>
 
 <!-- Intro -->
 <div
-  style="text-align: center; font-size: 15px; margin: 0 30px 30px; color: black"
+  style="text-align: center; font-size: 15px; margin: 0 40px 40px; color: black"
 >
-  Welcome to EduPlay, your trusted school management partner! To secure your
-  account, please confirm your email by clicking the button below:
+  <%= intro %>
+  <br>
+  <%= intro2 %>
 </div>
 
 <!-- Button -->
-<div style="text-align: center; margin-top: 20px">
+<div style="text-align: center; margin-top: 10px">
   <a
     href="<%- button.link %>"
     style="
       text-decoration: none;
       display: inline-block;
-      background-color: #22bc66;
+      background-color: <%- button.color %>;
       border-radius: 10px;
       color: white;
       padding: 12px 24px;

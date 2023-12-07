@@ -35,8 +35,9 @@ const sendVerification = async ({ name, email, verificationToken, origin }) => {
   const emailContent = {
     body: {
       name,
-      title: "Email Confirmation",
-      intro: "Please confirm your email by clicking on the following link:",
+      title: "Welcome to EduPlay!",
+      intro: "EduPlay, your trusted school management partner! To secure your account,",
+      intro2: "please confirm your email address by clicking on the button below:",
       button: {
         color: "#22BC66",
         text: "CONFIRM EMAIL",
