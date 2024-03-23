@@ -162,22 +162,27 @@ const getAllStudents = async (req, res) => {
 const getSingleStudent = async (req, res) => {
   try {
     const student = await Student.findOne({ username: req.params.id });
-    //const { firstName, lastName } = req.query;
-    //const student = await Student.findOne({ firstName, lastName });
 
     if (!student) {
       throw new CustomError.NotFoundError(
-        //`No student with firstName: ${firstName} and lastName: ${lastName}`
         `No student with username : ${req.params.id}`
       );
+    }
+
+    if (!student.isActive) {
+      throw new CustomError.UnauthenticatedError("Student account is disabled");
     }
 
     res.status(StatusCodes.OK).json({ student });
   } catch (error) {
     console.error(error); // Log the error to the console
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
+    if (error instanceof CustomError.UnauthenticatedError) {
+      res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
+    } else {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal Server Error" });
+    }
   }
 };
 
@@ -337,11 +342,9 @@ const disableStudent = async (req, res) => {
         .json({ error: `Student with username "${username}" not found` });
     }
 
-    res
-      .status(StatusCodes.OK)
-      .json({
-        message: `Student account for ${username} disabled successfully`,
-      });
+    res.status(StatusCodes.OK).json({
+      message: `Student account for ${username} disabled successfully`,
+    });
   } catch (error) {
     console.error("Error disabling student account:", error);
     res
@@ -366,11 +369,9 @@ const enableStudent = async (req, res) => {
         .json({ error: `Student with username "${username}" not found` });
     }
 
-    res
-      .status(StatusCodes.OK)
-      .json({
-        message: `Student account for ${username} enabled successfully`,
-      });
+    res.status(StatusCodes.OK).json({
+      message: `Student account for ${username} enabled successfully`,
+    });
   } catch (error) {
     console.error("Error enabling student account:", error);
     res
