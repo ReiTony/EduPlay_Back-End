@@ -308,6 +308,49 @@ const deleteStudent = async (req, res) => {
   }
 };
 
+const disableStudent = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    
+    const student = await Student.findOneAndUpdate(
+      { username },
+      { isActive: false }, 
+      { new: true }
+    );
+
+    if (!student) {
+      return res.status(StatusCodes.NOT_FOUND).json({ error: `Student with username "${username}" not found` });
+    }
+
+    res.status(StatusCodes.OK).json({ message: `Student account for ${username} disabled successfully` });
+  } catch (error) {
+    console.error('Error disabling student account:', error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+  }
+};
+
+const enableStudent = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const student = await Student.findOneAndUpdate(
+      { username },
+      { isActive: true }, 
+      { new: true }
+    );
+
+    if (!student) {
+      return res.status(StatusCodes.NOT_FOUND).json({ error: `Student with username "${username}" not found` });
+    }
+
+    res.status(StatusCodes.OK).json({ message: `Student account for ${username} enabled successfully` });
+  } catch (error) {
+    console.error('Error enabling student account:', error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   studentRegister,
   studentLogin,
@@ -317,4 +360,6 @@ module.exports = {
   showCurrentStudent,
   updateStudent,
   deleteStudent,
+  disableStudent,
+  enableStudent,
 };
