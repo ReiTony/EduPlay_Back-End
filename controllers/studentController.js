@@ -53,7 +53,6 @@ const studentLogin = async (req, res) => {
         "Please provide username and password"
       );
     }
-
     const student = await Student.findOne({
       username: { $regex: new RegExp(username, "i") },
     });
@@ -62,6 +61,11 @@ const studentLogin = async (req, res) => {
       throw new CustomError.UnauthenticatedError("Invalid Credentials");
     }
 
+    if (!student.isActive) {
+      throw new CustomError.UnauthenticatedError("Account is disabled");
+    }
+
+    // Check if the entered password is correct
     const isPasswordCorrect = await student.comparePassword(password);
 
     if (!isPasswordCorrect) {
@@ -106,9 +110,16 @@ const studentLogin = async (req, res) => {
     console.error("An error occurred:", error);
 
     // Send an error response to the frontend
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal server error" });
+    if (
+      error instanceof CustomError.UnauthenticatedError ||
+      error instanceof CustomError.BadRequestError
+    ) {
+      res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
+    } else {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal server error" });
+    }
   }
 };
 
@@ -293,7 +304,9 @@ const deleteStudent = async (req, res) => {
       console.log(`Deleted progress report for username: ${username}`);
     }
 
-    res.status(StatusCodes.OK).json({ message: "Student deleted successfully" });
+    res
+      .status(StatusCodes.OK)
+      .json({ message: "Student deleted successfully" });
   } catch (error) {
     if (error instanceof CustomError.BadRequestError) {
       res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
@@ -312,21 +325,28 @@ const disableStudent = async (req, res) => {
   try {
     const { username } = req.params;
 
-    
     const student = await Student.findOneAndUpdate(
       { username },
-      { isActive: false }, 
+      { isActive: false },
       { new: true }
     );
 
     if (!student) {
-      return res.status(StatusCodes.NOT_FOUND).json({ error: `Student with username "${username}" not found` });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: `Student with username "${username}" not found` });
     }
 
-    res.status(StatusCodes.OK).json({ message: `Student account for ${username} disabled successfully` });
+    res
+      .status(StatusCodes.OK)
+      .json({
+        message: `Student account for ${username} disabled successfully`,
+      });
   } catch (error) {
-    console.error('Error disabling student account:', error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+    console.error("Error disabling student account:", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
   }
 };
 
@@ -336,18 +356,26 @@ const enableStudent = async (req, res) => {
 
     const student = await Student.findOneAndUpdate(
       { username },
-      { isActive: true }, 
+      { isActive: true },
       { new: true }
     );
 
     if (!student) {
-      return res.status(StatusCodes.NOT_FOUND).json({ error: `Student with username "${username}" not found` });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: `Student with username "${username}" not found` });
     }
 
-    res.status(StatusCodes.OK).json({ message: `Student account for ${username} enabled successfully` });
+    res
+      .status(StatusCodes.OK)
+      .json({
+        message: `Student account for ${username} enabled successfully`,
+      });
   } catch (error) {
-    console.error('Error enabling student account:', error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+    console.error("Error enabling student account:", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
   }
 };
 
