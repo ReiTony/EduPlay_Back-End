@@ -11,6 +11,8 @@ const {
   updateStudent,
   deleteStudent,
   getAllStudents,
+  disableStudent,
+  enableStudent,
 } = require("../controllers/studentController");
 const {
   currentTeacher,
@@ -50,7 +52,8 @@ router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
-
+router.put("/disableStudent/:id", disableStudent);
+router.put("/enableStudent/:id", enableStudent);
 // Custom Assessment
 router.get("/custom-assessment", getCustomAssessmentAnalysis);
 
