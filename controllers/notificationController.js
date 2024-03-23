@@ -29,8 +29,8 @@ const getNotifications = async (req, res) => {
     }
 
     const notifications = await Notification.find(query)
-      .sort({ createdAt: -1 }) 
-      .limit(5); 
+      .sort({ createdAt: -1 })
+      .limit(5);
 
     res.status(200).json({ message: "Success", request: notifications });
   } catch (error) {
