@@ -52,8 +52,8 @@ router.post("/addStudent", studentRegister);
 router.get("/showStudent/:id", getSingleStudent);
 router.patch("/updateStudent/:id", updateStudent);
 router.delete("/deleteStudent/:id", deleteStudent);
-router.put("/disableStudent/:id", disableStudent);
-router.put("/enableStudent/:id", enableStudent);
+router.put("/disableStudent/:username", disableStudent);
+router.put("/enableStudent/:username", enableStudent);
 // Custom Assessment
 router.get("/custom-assessment", getCustomAssessmentAnalysis);
 
