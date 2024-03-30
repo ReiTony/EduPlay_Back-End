@@ -57,23 +57,18 @@ const createAssessmentRecord = async (req, res) => {
     }, 0);
 
     let recommendation = "";
+    let maxWrongAnswers = getMaxWrongAnswers(categories, assessment.categories);
+
     if (Math.max(...categories) === 0)
       recommendation = `You scored ${score}/${score} on the '${assessment.title}' assessment! Keep up the good work!`;
     else
-      recommendation = `You scored ${score}/${
-        assessment.questions.length
-      } on the '${
-        assessment.title
-      }'. Consider studying more about ${getMaxWrongAnswers(
-        categories,
-        assessment.categories
-      )} to help boost your score!`;
+      recommendation = `You scored ${score}/${assessment.questions.length} on the '${assessment.title}'. Consider studying more about ${maxWrongAnswers}`;
 
     const fields = {
       title: assessment.title,
       studentId: userId,
       score: score,
-      topic: assessment.categories,
+      topic: maxWrongAnswers,
       moduleNumber,
       gradeLevel: student.gradeLevel,
       answers,
