@@ -9,7 +9,7 @@ const AssessmentSchema = new mongoose.Schema(
     },
     score: { type: Number, required: true },
     total: { type: Number, required: true },
-    topic: { type: String},
+    topic: [{ type: String}],
     moduleNumber: { type: Number, required: true },
     gradeLevel: { type: Number, required: true },
     answers: { type: [Number], required: true },
