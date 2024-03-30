@@ -56,6 +56,10 @@ const StudentSchema = new mongoose.Schema(
     passwordTokenExpirationDate: {
       type: Date,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

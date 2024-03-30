@@ -12,11 +12,30 @@ const getAssessmentRecords = async (req, res) => {
     if (gradeLevel) query.gradeLevel = gradeLevel;
     if (studentId) query.studentId = studentId;
 
+    const student = await Student.findById(studentId);
+
+    if (!student) {
+      throw new CustomError.NotFoundError("Student not found");
+    }
+
+    if (!student.isActive) {
+      throw new CustomError.UnauthenticatedError("Student account is disabled");
+    }
+
     const assessments = await AssessmentRecord.find(query);
     res.status(200).json({ message: "Success", request: assessments });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
+    if (
+      error instanceof CustomError.UnauthenticatedError ||
+      error instanceof CustomError.NotFoundError
+    ) {
+      res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
+    } else {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: error.message });
+    }
   }
 };
 
@@ -38,22 +57,18 @@ const createAssessmentRecord = async (req, res) => {
     }, 0);
 
     let recommendation = "";
+    let maxWrongAnswers = getMaxWrongAnswers(categories, assessment.categories);
+
     if (Math.max(...categories) === 0)
       recommendation = `You scored ${score}/${score} on the '${assessment.title}' assessment! Keep up the good work!`;
     else
-      recommendation = `You scored ${score}/${
-        assessment.questions.length
-      } on the '${
-        assessment.title
-      }'. Consider studying more about ${getMaxWrongAnswers(
-        categories,
-        assessment.categories
-      )} to help boost your score!`;
+      recommendation = `You scored ${score}/${assessment.questions.length} on the '${assessment.title}'. Consider studying more about ${maxWrongAnswers}`;
 
     const fields = {
       title: assessment.title,
       studentId: userId,
       score: score,
+      topic: maxWrongAnswers,
       moduleNumber,
       gradeLevel: student.gradeLevel,
       answers,
@@ -74,6 +89,7 @@ const createAssessmentRecord = async (req, res) => {
           gradeLevel: student.gradeLevel,
           moduleNumber,
           score: { $lt: score },
+          topic: maxWrongAnswers,
         },
         fields
       );
@@ -136,7 +152,7 @@ function getBadge(score) {
   } else if (score === 4) {
     return "bronze";
   } else {
-    return null; 
+    return null;
   }
 }
 

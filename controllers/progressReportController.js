@@ -1,4 +1,5 @@
 const ProgressReport = require("../models/progressReportsSchema");
+const Student = require("../models/studentSchema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
@@ -17,7 +18,19 @@ const getProgressReports = async (req, res) => {
 
 const getProgressReportByStudent = async (req, res) => {
   try {
-    const { username } = req.params; // Assuming the username is passed as a parameter
+    const { username } = req.params;
+
+    const student = await Student.findOne({ username });
+
+    if (!student) {
+      throw new CustomError.NotFoundError("Student not found");
+    }
+
+    if (!student.isActive) {
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: "Student account is disabled" });
+    }
 
     const progressReport = await ProgressReport.findOne({ username });
 
@@ -50,7 +63,7 @@ const updateProgressReport = async (req, res) => {
     );
 
     if (!progressReport) {
-      throw aCustomError.NotFoundError("Progress report not found");
+      throw new CustomError.NotFoundError("Progress report not found");
     }
 
     res.status(StatusCodes.OK).json({ progressReport });

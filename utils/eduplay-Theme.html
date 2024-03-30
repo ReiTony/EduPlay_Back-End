@@ -1,0 +1,66 @@
+<!-- eduplay-Theme.html -->
+
+<!-- Logo (200px) -->
+<div style="text-align: center">
+  <a href="<%- product.link %>" target="_blank">
+    <img
+      src="<%- product.logo %>"
+      style="height: <%- product.logoHeight %>"
+      alt="EduPlay Logo"
+    />
+  </a>
+</div>
+
+<!-- Title -->
+<div
+  style="
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: black;
+  "
+>
+  <%= title %>
+</div>
+
+<!-- Intro -->
+<div
+  style="text-align: center; font-size: 15px; margin: 0 40px 40px; color: black"
+>
+  <%= intro %>
+  <br>
+  <%= intro2 %>
+</div>
+
+<!-- Button -->
+<div style="text-align: center; margin-top: 10px">
+  <a
+    href="<%- button.link %>"
+    style="
+      text-decoration: none;
+      display: inline-block;
+      background-color: <%- button.color %>;
+      border-radius: 10px;
+      color: white;
+      padding: 12px 24px;
+      font-size: 20px;
+      cursor: pointer;
+    "
+  >
+    <%= button.text %>
+  </a>
+</div>
+
+<!-- Copyright -->
+<div
+  style="text-align: center; margin-top: 20px; font-size: 15px; color: black"
+>
+  <a
+    href="<%- product.link %>"
+    style="color: black; text-decoration: underline"
+    target="_blank"
+  >
+    &copy; 2023 EduPlay. All rights reserved.
+  </a>
+</div>

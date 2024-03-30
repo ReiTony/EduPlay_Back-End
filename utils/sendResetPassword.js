@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const Mailgen = require("mailgen");
+const path = require("path");
 require("dotenv").config();
 
 const createTransporter = async () => {
@@ -19,23 +21,43 @@ const sendResetPassword = async ({ teacher, token, origin }) => {
       throw new Error("Email not provided for password reset.");
     }
 
-    const resetURL = `${origin}/user/reset-password?token=${token}&email=${teacher.email}`;
-
-    console.log("Reset URL:", resetURL);
-    console.log("Token sent in email:", token);
-
     const transporter = await createTransporter();
 
-    const message = `<p>Please reset your password by clicking on the following link : 
-      <a href="${resetURL}">Reset Password</a></p>`;
+    const mailGenerator = new Mailgen({
+      theme: {
+        path: path.resolve(__dirname, "../utils/eduplay-Theme.html"),
+      },
+      product: {
+        name: "EduPlay",
+        link: "https://eduplay-lhjs.onrender.com/",
+        logo: "https://drive.google.com/uc?id=1AvTHkFmbzNKkuAGo4K2Lx-jtecs9LiMI",
+        logoHeight: "200px",
+      },
+    });
+
+    const resetURL = `${origin}/user/reset-password?token=${token}&email=${teacher.email}`;
+
+    const emailContent = {
+      body: {
+        name: teacher.name,
+        title: "Password Reset",
+        intro: "Click the button below to reset your password:",
+        intro2: "If you did not request a password reset, please ignore this email.",
+        button: {
+          color: "red",
+          text: "RESET PASSWORD",
+          link: resetURL,
+        },
+      },
+    };
+
+    const emailTemplate = mailGenerator.generate(emailContent);
 
     const mailOptions = {
       from: '"EduPlay" <eduplay1909@gmail.com>',
       to: teacher.email,
-      subject: "Reset Password",
-      html: `<h4>Hello, ${teacher.name}</h4>
-        ${message}
-      `,
+      subject: "Password Reset",
+      html: emailTemplate,
     };
 
     const info = await transporter.sendMail(mailOptions);
