@@ -73,6 +73,7 @@ const createAssessmentRecord = async (req, res) => {
       title: assessment.title,
       studentId: userId,
       score: score,
+      topic: assessment.categories,
       moduleNumber,
       gradeLevel: student.gradeLevel,
       answers,
@@ -93,6 +94,7 @@ const createAssessmentRecord = async (req, res) => {
           gradeLevel: student.gradeLevel,
           moduleNumber,
           score: { $lt: score },
+          topic: assessment.categories,
         },
         fields
       );
