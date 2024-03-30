@@ -3,6 +3,7 @@ const Notification = require("../models/notificationSchema");
 const Achievement = require("../models/achievementSchema");
 const AssessmentRecord = require("../models/assessmentRecordsSchema");
 const { getModuleSync } = require("./moduleController");
+const ProgressReport = require("../models/progressReportsSchema");
 
 const getAssessmentRecords = async (req, res) => {
   try {
@@ -41,7 +42,7 @@ const getAssessmentRecords = async (req, res) => {
 
 const createAssessmentRecord = async (req, res) => {
   try {
-    const { moduleNumber, userId, answers, assessment } = req.body;
+    const { moduleNumber, userId, answers, assessment, username } = req.body;
     if (!moduleNumber || !userId || !answers)
       return res
         .status(400)
@@ -81,8 +82,12 @@ const createAssessmentRecord = async (req, res) => {
       gradeLevel: student.gradeLevel,
       moduleNumber,
     }).lean();
-    if (foundAssessment.length === 0) await new AssessmentRecord(fields).save();
-    else if (foundAssessment[0].score < score)
+    if (foundAssessment.length === 0) {
+      await new AssessmentRecord(fields).save();
+      let progressReport = await ProgressReport.findOne({ username });
+      progressReport.assessmentScores[moduleNumber - 1].topic = maxWrongAnswers;
+      await progressReport.save();
+    } else if (foundAssessment[0].score < score) {
       await AssessmentRecord.findOneAndUpdate(
         {
           studentId: userId,
@@ -93,7 +98,10 @@ const createAssessmentRecord = async (req, res) => {
         },
         fields
       );
-
+      let progressReport = await ProgressReport.findOne({ username });
+      progressReport.assessmentScores[moduleNumber - 1].topic = maxWrongAnswers;
+      await progressReport.save();
+    }
     // Determine the badge based on the score
     const badge = getBadge(score);
 
@@ -158,6 +166,7 @@ function getBadge(score) {
 
 const getMaxWrongAnswers = (arr, categories) => {
   let max = Math.max(...arr);
+  if (max === 0) return "";
   let maxIndices = [];
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] === max) maxIndices.push(categories[i]);
